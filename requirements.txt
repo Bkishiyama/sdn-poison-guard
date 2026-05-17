@@ -1,0 +1,17 @@
+# requirements.txt — SDN Federated Anomaly Detection Tool
+# Install using bash: pip install -r requirements.txt
+
+# Libraries to use
+numpy>=1.24
+pandas>=2.0
+scikit-learn>=1.3
+
+# Model serialization to save ML model
+joblib>=1.3
+
+# Config parsing - to rerun experiment
+pyyaml>=6.0
+
+# Libraries for plotting and visualization
+matplotlib>=3.7
+seaborn>=0.12
