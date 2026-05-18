@@ -1,0 +1,21 @@
+# config/fed_config.yaml
+# Configuration for the multi-round Federated Learning simulation.
+# Used by: python cli.py simulate-fl --config config/fed_config.yaml
+
+# Client data
+client_data:
+  - data/client1.csv
+  - data/client2.csv
+  - data/client3.csv
+
+client_ids:
+  - client1
+  - client2
+  - client3
+
+# FL parameters
+n_rounds: 3  # number of FL aggregation rounds
+n_estimators: 100 # Isolation Forest trees per client per round
+
+# Output
+model_dir: models/ # where to save per-round and global models
