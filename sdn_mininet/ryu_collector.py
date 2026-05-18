@@ -208,13 +208,11 @@ class SDNFlowCollector(app_manager.RyuApp):
         )
         datapath.send_msg(mod)
 
-    #Convert OpenFlow flow stat into a CSV row.
+    #Convert OpenFlow flow stat into a CSV row
+    # Extract counters from an OFPFlowStats entry
+    # Uses MAC addresses since L2 flows don't have IP match fields
+    # Skips table-miss entries (priority=0, no src/dst)
     def _stat_to_row(self, stat, dpid, ts) -> dict:
-    	"""
-    	Extract counters from an OFPFlowStats entry.
-    	Uses MAC addresses since L2 flows don't have IP match fields.
-    	Skips table-miss entries (priority=0, no src/dst).
-    	"""
     	match = stat.match
 
     	src_mac = match.get("eth_src", "")
