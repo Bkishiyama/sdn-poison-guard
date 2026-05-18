@@ -46,7 +46,7 @@ def cmd_federated_aggregate(args):
     models, paths = load_client_models(args.models)
     aggregate_and_save(models, args.out, strategy=args.strategy)
     
-    print(f"\n[✓] Global federated model saved to: {args.out}")
+    print(f"\n[!] Global federated model saved to: {args.out}")
     print(f"    Strategy used: {args.strategy}")
 
 
@@ -65,7 +65,7 @@ def cmd_detect(args):
         # Create output folder if it doesn't exist
         os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
         df.to_csv(args.out, index=False)
-        print(f"\n[✓] Detection results saved to: {args.out}")
+        print(f"\n[!] Detection results saved to: {args.out}")
     else:
         # Show a preview in terminal if no output file specified
         print("\n── Top 10 Most Suspicious Flows ──")
@@ -92,7 +92,7 @@ def cmd_evaluate(args):
     y_true = get_labels(df_test)
     
     if y_true is None:
-        print("[!] Error: Test file must contain a 'label' column for evaluation.")
+        print("[-] Error: Test file must contain a 'label' column for evaluation.")
         sys.exit(1)
     
     results = []
@@ -133,7 +133,7 @@ def cmd_evaluate(args):
     
     print("\n── Evaluation Summary ──")
     print(summary[["label", "accuracy", "precision", "recall", "f1"]].to_string(index=False))
-    print(f"\n[✓] All evaluation results saved to folder: {args.out}")
+    print(f"\n[!] All evaluation results saved to folder: {args.out}")
     
     # Generate comparison charts
     plot_comparison_bar(results, metric="f1", 
@@ -179,7 +179,7 @@ def cmd_generate_data(args):
         seed=args.seed,
     )
     
-    print(f"\n[✓] Synthetic data generated in: {args.out_dir}")
+    print(f"\n[!] Synthetic data generated in: {args.out_dir}")
     print(f"    Created {args.n_clients} client datasets.")
 
 
