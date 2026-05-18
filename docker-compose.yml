@@ -1,0 +1,16 @@
+# docker-compose.yml — SDN Federated Anomaly Detection Tool
+#
+# Usage:
+# docker compose up # run full pipeline, results saved to ./results/
+# docker compose run tool bash # interactive shell
+
+services:
+  tool:
+    build: .
+    image: sdn-fl-detector
+    container_name: sdn-fl-detector
+    volumes:
+      # Results are written here so you can access them on your host machine
+      - ./results:/app/results
+    environment:
+      - PYTHONUNBUFFERED=1    # ensures print() output appears immediately
