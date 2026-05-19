@@ -10,11 +10,11 @@ After running an experiment with attacks, use this tool to mark
 which flows happened during the attack window as malicious (label=1).
 
 Common usage:
-  python mininet/label_window.py --file data/live_client1.csv \
-    --start "2025-05-17T14:30:00" --end "2025-05-17T14:35:00"
+  python3 mininet/label_window.py --file data/live_client1.csv \
+    --start "2026-05-18T14:30:00" --end "2026-05-18T14:35:00"
 
 Or label everything (if the whole capture was an attack):
-  python mininet/label_window.py --file data/attack_only.csv --all --label 1
+  python3 mininet/label_window.py --file data/attack_only.csv --all --label 1
 """
 
 import argparse
