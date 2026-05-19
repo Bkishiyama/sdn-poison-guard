@@ -82,7 +82,7 @@ def train_local(
 
     if verbose:
         print(f"[{client_id}] ✓ Model saved to: {model_path}")
-        print(f"[{client_id}] Score stats → mean={score_stats['mean']:.4f}, "
+        print(f"[{client_id}] Score stats -> mean={score_stats['mean']:.4f}, "
               f"p5={score_stats['p5']:.4f} (used as threshold)")
 
     return bundle["meta"]
