@@ -79,20 +79,20 @@ def start_benign_traffic(net, duration: int):
     time.sleep(0.5)
 
     # h2 -> h1: TCP stream (simulates normal data transfer)
-    h2.cmd(f"iperf3 -c 10.0.1.1 -t {duration} -i 5 "
+    h2.cmd(f"iperf3 -c 10.0.0.1 -t {duration} -i 5 "
            f"--logfile /tmp/iperf3_h2_tcp.log &")
 
     # h3 -> h1: UDP stream (simulates video/VoIP)
-    h3.cmd(f"iperf3 -c 10.0.1.1 -u -b 1M -t {duration} -i 5 "
+    h3.cmd(f"iperf3 -c 10.0.0.1 -u -b 1M -t {duration} -i 5 "
            f"--logfile /tmp/iperf3_h3_udp.log &")
 
     # h5 -> h1: repeated pings (simulates keepalives / monitoring)
-    h5.cmd(f"ping -i 1 -c {duration} 10.0.1.1 > /tmp/ping_h5.log 2>&1 &")
+    h5.cmd(f"ping -i 1 -c {duration} 10.0.0.1 > /tmp/ping_h5.log 2>&1 &")
 
     # h2 -> h3: lightweight TCP connection (simulates interorg traffic)
     h3.cmd("python3 -m http.server 8080 > /tmp/http_server.log 2>&1 &")
     h2.cmd(f"for i in $(seq 1 {duration // 3}); do "
-           f"  curl -s http://10.0.2.1:8080 > /dev/null; sleep 3; done &")
+           f"  curl -s http://10.0.0.3:8080 > /dev/null; sleep 3; done &")
 
     info("[!] iperf3 TCP/UDP, ping, HTTP traffic started\n")
 
@@ -114,7 +114,7 @@ def start_attack_traffic(net, duration: int):
     h4.cmd(
         f"timeout {duration} hping3 -S -p 80 "
         f"--interval u10000 --rand-source "
-        f"10.0.1.1 > /tmp/hping3_ddos.log 2>&1 &"
+        f"10.0.0.1 > /tmp/hping3_ddos.log 2>&1 &"
     )
 
     # Port scan: h6 scans all hosts
@@ -144,7 +144,7 @@ def label_attack_flows(net):
 LABEL_SCRIPT_HINT = """
 After traffic generation, label the attack flows:
 
-  python mininet/label_window.py \\
+  python sdn_mininet/label_window.py \\
     --file data/live_client2.csv \\
     --start "2026-05-18T10:05:00" \\
     --end   "2026-05-18T10:10:00" \\
