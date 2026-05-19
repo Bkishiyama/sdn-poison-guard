@@ -1,6 +1,6 @@
 # Dockerfile — SDN Federated Anomaly Detection Tool
 #
-# Runs the full synthetic pipeline (generate → train → aggregate → detect → evaluate).
+# Runs the full synthetic pipeline (generate -> train -> aggregate -> detect -> evaluate).
 # Note: Mininet + Ryu live mode requires Ubuntu 20.04 natively (see README).
 #
 # Build:
