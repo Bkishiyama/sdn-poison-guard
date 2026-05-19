@@ -40,7 +40,7 @@ def label_window(file: str, start: str | None, end: str | None,
         print("[Label] Added new 'label' column (default = 0)")
 
     # Convert timestamp to proper datetime format
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df["timestamp"] = pd.to_datetime(df["timestamp"], format="ISO8601")
 
     if label_all:
         # Label every single row
