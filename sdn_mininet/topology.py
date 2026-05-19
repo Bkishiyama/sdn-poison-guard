@@ -13,7 +13,7 @@ DDoS    : hping3 SYN flood from h4 -> h1
 Scan    : nmap port scan from h6 -> h1..h5
 
 Useage:
-  sudo python mininet/topology.py [--attack]
+  sudo python3 mininet/topology.py [--attack]
     --attack   also launch attack traffic generators (default: benign only)
     --time N   run for N seconds (default: 60)
 
