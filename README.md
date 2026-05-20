@@ -72,7 +72,7 @@ This project addresses this issue.
 
 ### Architecture
 
-![Architecture Diagram](docs/sdn-fl-det.drawio.svg)
+![Architecture Diagram](docs/sdn-fl-detector.drawio.svg)
 
 
 ### Core Components
