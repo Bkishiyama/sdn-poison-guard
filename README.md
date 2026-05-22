@@ -111,20 +111,10 @@ In this system, each raw flow is represented using eight numeric features.
 
 ### Federated Aggregation Design
 
-Two complementary aggregation strategies:
-
-- **Strategy A — Score Ensemble:** 
-I use this approach. 
+I use **Strategy A Score Ensemble**  aggregation strategy.   
 This is where each client uses its own model and scaler to assign an anomaly score to new network flows. 
 All clients send these scores to the central model, in which they are averaged to produce a final global anomaly score. 
 The client's raw data is not shared with the central model - only the computed scores. 
-
-- **Strategy B — Threshold Consensus:** 
-Each client calculates its own anomaly scores and determines a cutoff value using the 95th percentile.
-This is a cutoff value such that only the highest 5% of client's scores are above it, meaning they are the most unusual or suspicious values in the data.
-In other words, each client identifies a boundary between “normal” and “unusually high” scores based on its own data.
-These percentile-based thresholds are then averaged across all clients to produce a single global threshold.
-Any new flow with a score above this final threshold is classified as an anomaly.
 
 ### Technology Choices
 
@@ -160,7 +150,7 @@ In this case, the dataset should be formatted as a CSV with the following column
 
 #### Experimental Setup
 
-- **3 clients**, each with ~1,920 training flows (benign-heavy, ~16% attack)
+- **3 clients**, each with about 1,920 training flows (benign-heavy, 16% attack)
 - **1,440-flow combined labeled test set** (held out, not seen during training)
 - Labels used **only for evaluation**, not training (true unsupervised setup)
 - Threshold: federated consensus (mean of each client's 5th-percentile score)
