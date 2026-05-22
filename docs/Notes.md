@@ -1,5 +1,9 @@
 # Research Notes
 
+## Helpful Notes
+### Run system on Docker
+[Docker Copy and Paste](https://1drv.ms/w/c/0b9ef4570f82165e/IQD-QWe9zvwpRKE1oNgw0TT4ATfUrsw-xcZuEtRkoxQL8yA?e=jBDDw0)
+
 Rough Draft (revise and insert into README.md)
 [Feature Engineering](https://1drv.ms/w/c/0b9ef4570f82165e/IQChg9014r_vQ4ej1sI0ZXl5AaSocSKd_ogjEY5yLk53cWg?e=CUnYon)
 
