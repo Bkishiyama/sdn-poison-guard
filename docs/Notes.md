@@ -2,10 +2,17 @@
 
 ## Helpful Notes
 ### Run system on Docker
+
+I recommend running on Docker since the steps are easier and you can run on Windows, MacOS, or Linux:
 [Docker Copy and Paste](https://1drv.ms/w/c/0b9ef4570f82165e/IQD-QWe9zvwpRKE1oNgw0TT4ATfUrsw-xcZuEtRkoxQL8yA?e=jBDDw0)
 
 Rough Draft (revise and insert into README.md)
 [Feature Engineering](https://1drv.ms/w/c/0b9ef4570f82165e/IQChg9014r_vQ4ej1sI0ZXl5AaSocSKd_ogjEY5yLk53cWg?e=CUnYon)
+
+### Run on Ubuntu 20.04
+
+If you want to see more action, and have Ubuntu 20.04, run it:
+[Run system on Ubuntu 20.04](https://1drv.ms/w/c/0b9ef4570f82165e/IQAmXO4cxcotSavnhSNEXlNkAXPqC-59fMAETPiFewCAOAU?e=gws1CK) 
 
 ## AI Use
 
