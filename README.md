@@ -1,6 +1,6 @@
 # SDN Federated Learning Model with Poisoning Guard
 
-![Network](docs/network.jpg)
+<img src="docs/network.jpg" style="width:100%; max-height:300px; object-fit:contain;">
 
 
 **Tool 2: Model Posioning Sanitizer**
