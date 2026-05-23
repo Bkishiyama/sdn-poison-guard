@@ -1,16 +1,21 @@
-# SDN Federated Anomaly Detection Tool
+# SDN Federated Learning Model with Poisoning Guard
 
-**Federated Unsupervised Anomaly Detection for Software-Defined Networks**
+**Tool 2: Model Posioning Sanitizer**
 
-This is a modular Python tool that generates **SDN flow logs** and uses them to train local anomaly detection models with Isolation Forest.
-**Isolation Forest**  is a maching learning (ML) algorithm used for finding unusual data points in a dataset.
-Each organization trains its own model locally, and the resulting model updates are combined to create a global federated model. 
-Isolation Forest anomaly detectors are implanted across participating organizations to identify suspicious network behavior. 
-Overall, this system uses **Federated Learning (FL)**, which allows organizations to collaboratively train and improve a global ML model, without exposing any of their private data with other participants.
+This tool extends Tool 1 of my sdn-fl-detector repository. Most files have not changed. It's goal is to secure the machine learning (ML) pipeline. 
+
+Tool 1 detected threats in my Software Defined Network (SDN), created logs, and used the logs in my Federated Learaning (FL) model.
+Tool 2 defends the network against attackers who try to influence the FL model. 
+This project utilizes a Byzantine statistical filter in the Ryu SDN controller to defend the FL model from being poisoned.
+Basically, it applies a Z-score anomaly detection uploads from the clients and determines if the data is corrupted.
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 ---
 
 ## Video Presentation
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 Watch my videos:
 
@@ -18,7 +23,9 @@ Watch my videos:
 > 📚 with [Docker copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQD-QWe9zvwpRKE1oNgw0TT4ATfUrsw-xcZuEtRkoxQL8yA?e=jBDDw0)
  
 > 🎥 [SDN FL Anomaly Detection on Ubuntu (Optional)](https://youtu.be/Rrwn5y1k69c)  
-> 📚 with [Ubuntu copy-and-past commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQAmXO4cxcotSavnhSNEXlNkAXPqC-59fMAETPiFewCAOAU?e=gws1CK) 
+> 📚 with [Ubuntu copy-and-past commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQAmXO4cxcotSavnhSNEXlNkAXPqC-59fMAETPiFewCAOAU?e=gws1CK)
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 ---
 
@@ -34,6 +41,8 @@ Watch my videos:
 8. Repository Structure
 9. Known Issues
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ---
 
 ## Section I: Problem Definition
@@ -46,11 +55,15 @@ However, labeled attack data is usually scarce and unevenly distributed.
 In some cases, data may not be combined across organizations because of privacy, policy, or regulatory restrictions. 
 This makes it difficult to develop and train effective ML models for threat detection.
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ### Importance
 
 SDN controllers are central components in cloud and enterprise networks. 
 Attacks such as DDoS, port scanning, spoofing, and flow table exhaustion can hinder network communication. 
 To address these threats, organizations need scalable, data-driven anomaly detection systems that do not expose their sensitive data.
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 ### Existing Approaches
 
@@ -61,6 +74,8 @@ To address these threats, organizations need scalable, data-driven anomaly detec
 | Centralized ML | Pooled NetFlow datasets | Requires raw data sharing |
 | Per-org ML | Custom models | Not enough data for effective detection |
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ### The Issue
 
 There is no lightweight, reproducible tool that:
@@ -70,6 +85,8 @@ There is no lightweight, reproducible tool that:
 
 This project addresses this issue. 
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ---
 
 ## Section II: System Design
@@ -78,6 +95,7 @@ This project addresses this issue.
 
 ![Architecture Diagram](docs/sdn-fl-detector.drawio.svg)
 
+IN PROGRESS - UPDATE and REMOVE when completed
 
 ### Core Components
 
@@ -91,12 +109,16 @@ This project addresses this issue.
 | CLI | `src/cli.py` | Argparse-based interface wiring all modules |
 | Data Generator | `scripts/generate_data.py` | Synthetic SDN flow CSV generator for quick-start testing |
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ### Feature Engineering
 
 Feature engineering is the process of transforming raw data into meaningful numerical inputs that a ML model can interpret and learn from.
 It involves the process of selecting, extracting, or constructing features that capture patterns in the data.
 This is essential for improving model performance. 
 In this system, each raw flow is represented using eight numeric features.
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 | Feature | Description |
 |---|---|
@@ -116,6 +138,8 @@ This is where each client uses its own model and scaler to assign an anomaly sco
 All clients send these scores to the central model, in which they are averaged to produce a final global anomaly score. 
 The client's raw data is not shared with the central model - only the computed scores. 
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ### Technology Choices
 
 | Component | Choice | Justification |
@@ -127,6 +151,8 @@ The client's raw data is not shared with the central model - only the computed s
 | CLI | argparse | No extra dependencies & easy to extend |
 | Config | PyYAML | Easy to read FL simulation config |
 | Graphs | matplotlib, seaborn | Standard evaluation |
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 ---
 
@@ -140,6 +166,8 @@ This produces realistic benign and attack traffic without a download.
 It can also be evaluated using public datasets such as UNSW-NB15 or CICDDoS2019.
 In this case, the dataset should be formatted as a CSV with the following columns: `src_ip, dst_ip, src_port, dst_port, protocol, bytes, packets, duration, flags, label`.
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 #### Synthetic Attack Types
 
 | Attack | Characteristics | Client Skew |
@@ -148,12 +176,16 @@ In this case, the dataset should be formatted as a CSV with the following column
 | Port Scan | Tiny packets, many unique dst_ports, SYN flags | Heavy in Client 3 |
 | Flow Table Exhaustion | Random src IPs, all ports, tiny packets | Heavy in Client 3 |
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 #### Experimental Setup
 
 - **3 clients**, each with about 1,920 training flows (benign-heavy, 16% attack)
 - **1,440-flow combined labeled test set** (held out, not seen during training)
 - Labels used **only for evaluation**, not training (true unsupervised setup)
 - Threshold: federated consensus (mean of each client's 5th-percentile score)
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 ### Results
 
@@ -166,11 +198,14 @@ Local:client1    0.8632     0.8571  0.1810 0.2989    0.8496
 Local:client2    0.8722     0.6690  0.4095 0.5080    0.7606
 Local:client3    0.8771     0.9231  0.2586 0.4040    0.8291
 ```
+IN PROGRESS - UPDATE and REMOVE when completed
 
 **Key findings:**
 - The federated model achieves **very high precision (0.96)** or with low false positives.
 - **ROC-AUC of 0.77** shows meaningful separation between attack and benign traffic in score space.
 - Local models trained on one client's data perform poorly on other clients' data - demonstrating the value of federated aggregation.
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 #### Live Mininet + Ryu Results
 
@@ -184,6 +219,8 @@ Local:live_c3    0.0348     1.0000  0.0348 0.0673
 
 The live results demonstrate the core value of the federated approach: local models trained on one switch's traffic perform poorly on another switch's data (3-5% recall), while the federated model combining all three achieves dramatically better detection.
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ### Known Issues and Limitations
 
 | Limitation | Impact | Notes |
@@ -195,9 +232,13 @@ The live results demonstrate the core value of the federated approach: local mod
 | Manual labeling | Attack window labeled by timestamp | Requires noting attack start time and running label_window.py |
 | Python 3.8 required | Ubuntu 20.04 ships with Python 3.8 | All files use `from __future__ import annotations` for compatibility |
 
+IN PROGRESS - UPDATE and REMOVE when completed
+
 ---
 
 ## Quick Start
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 ### Option 1: Synthetic pipeline (any OS)
 
@@ -230,7 +271,7 @@ Then follow the Live Mode steps below.
 ---
 
 ## Installation
-
+IN PROGRESS - UPDATE and REMOVE when completed
 ### Requirements
 
 - Python 3.8+
@@ -259,7 +300,7 @@ python3 cli.py --help
 ---
 
 ## How to Run
-
+IN PROGRESS - UPDATE and REMOVE when completed
 ### Method 1: Synthetic Pipeline
 
 ```bash
@@ -290,7 +331,7 @@ make all
 
 ---
 ### Method 2: Docker
-
+IN PROGRESS - UPDATE and REMOVE when completed
 #### Step 1: Install Docker**
 
 Go to the website and install Docker on Windows, Linux, or MAC
@@ -459,7 +500,7 @@ sudo mn -c
 ---
 
 ## CLI Reference
-
+IN PROGRESS - UPDATE and REMOVE when completed
 | Command | Description |
 |---|---|
 | `generate-data` | Generate synthetic SDN flow CSVs for N clients |
@@ -474,6 +515,8 @@ Run `python3 cli.py <command> --help` for full options on any command.
 ---
 
 ## Repository Structure
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 1. The Core Data & Feature Pipeline Before any machine learning happens, network traffic has to be captured and turned into numbers a model can understand.
   - scripts/generate_data.py 
@@ -559,6 +602,8 @@ Run `python3 cli.py <command> --help` for full options on any command.
 ---
 
 ## Known Issues
+
+IN PROGRESS - UPDATE and REMOVE when completed
 
 | Limitation | Notes |
 |---|---|
