@@ -42,3 +42,5 @@ This was to only make an emulated network inside mininet for eventual testing - 
 Amin et al. is what I wanted to do. But, I am staying flexible and hopefully can develop a topic for my dissertation.
 
 I use FlexClip to generate .jpg pictures. I have a license to create AI images that are not subject to copyright laws. I use drawio to create .svg diagrams; this contains pre-drawn shapes but does not rely on AI.
+
+PyCharm used to help with code completion.
