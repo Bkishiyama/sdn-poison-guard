@@ -208,9 +208,6 @@ if RYU_AVAILABLE:
                     '''
 
 
-
-
-
         """ Sanitizer trigger (called by REST API)
         This is where FL aggregation occurs after filtering malicious data
         1. Takes all uploaded client updates stored in _upload_queue
