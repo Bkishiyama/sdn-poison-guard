@@ -568,6 +568,13 @@ Once the global federated model is built, it needs to be put to work and its per
       - Confusion matrices -  grid charts that show what the AI got right versus what it misdiagnosed
       - Performance bar charts. 
     - In essense, this evaluation shows whether the AI is actually effective. A high precision score means the AI won't annoy network administrators with false alarms, while a high recall score shows that the system won't completely miss a malignant attacks.
+  - tests/test_sanitizer.py
+    - This script is for automated verification. Before using the sanitizer in the Ryu controller, we want to test it. Verification should be completed for every condition that is used. ChatGPT provided 29 assertions that should be tested in four different scenarios:
+      - A healthy network where all six hosts are honest. This should show no rejections.
+      - A single poisoned host where host 6 (h6) should be detected and removed.
+      - Edge cases with empty inputs, groups too small for statistical analysis, and all uploads are identical.
+      - Vector sanitation for hosts that upload an array of parameters instead of a single number.
+    - Usage: python3 -m pytest tests/test_sanitizer.py -v      
 ---
 4. SDN Integration Real Network Emulation 
 
