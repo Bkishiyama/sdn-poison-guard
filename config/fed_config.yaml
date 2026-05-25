@@ -7,11 +7,17 @@ client_data:
   - data/client1.csv
   - data/client2.csv
   - data/client3.csv
+  - data/client4.csv
+  - data/client5.csv
+  - data/client6.csv
 
 client_ids:
-  - client1
-  - client2
-  - client3
+  - h1
+  - h2
+  - h3
+  - h4
+  - h5
+  - h6
 
 # FL parameters
 n_rounds: 3  # number of FL aggregation rounds
@@ -19,3 +25,23 @@ n_estimators: 100 # Isolation Forest trees per client per round
 
 # Output
 model_dir: models/ # where to save per-round and global models
+
+# --- Tool 2 settings (added) ---
+ 
+# Enable Byzantine-robust Z-score sanitizer before FedAvg aggregation
+# Set to false to reproduce Tool 1 (naive FedAvg) behavior
+sanitize: true
+ 
+# Z-score threshold for rejecting poisoned updates
+# 1.5 = tight (recommended for ≤9 hosts)
+# 2.0 = standard (recommended for ≥10 hosts)
+z_threshold: 2.0
+ 
+# Poisoning simulation: specify which clients to poison and their multipliers
+# Comment out or set to {} to run a clean (healthy) simulation
+# Example: inject h6 with 100x multiplier to simulate an adversarial insider
+poisoned_clients:
+  h6: 100.0
+ 
+# Path to write per-round sanitizer audit log
+sanitizer_log: results/sanitizer_log.csv
