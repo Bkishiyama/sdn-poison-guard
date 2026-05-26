@@ -243,11 +243,11 @@ def build_parser() -> argparse.ArgumentParser:
     These options control dataset size, number of clients,
     output directory, and random seed for reproducibility '''
     # Number of normal (benign) samples to generate.
-    sp.add_argument("--n-normal", type=int, default=5000)
+    sp.add_argument("--n-benign", type=int, default=2000) # Tool 2 normal -> benign
     # Number of attack/anomalous samples to generate.
     sp.add_argument("--n-attack", type=int, default=500)
     # Number of federated learning clients to simulate.
-    sp.add_argument("--clients", type=int, default=3)
+    sp.add_argument("--n-clients", type=int, default=3) # Tool2 add -n
     # Directory where generated datasets will be saved.
     sp.add_argument("--out-dir", default="data")
     # Random seed used to ensure reproducible results.
