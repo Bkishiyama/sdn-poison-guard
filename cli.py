@@ -356,7 +356,7 @@ def build_parser() -> argparse.ArgumentParser:
     # Path to the CSV file containing detection results and labels.
     sp.add_argument("--detections", required=True)
     # Directory where evaluation reports and metrics will be saved
-    sp.add_argument("--out-dir", default="results")
+    sp.add_argument("--out", default="results")
 
     # Set the default function to run when the "evaluate" command is selected.
     # This connects the parsed CLI arguments to the cmd_evaluate handler.
