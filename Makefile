@@ -51,6 +51,7 @@ detect:
 # Evaluation - update to Tool2
 evaluate:
 	$(CLI) evaluate \
+		--model	models/global.pkl \
 		--detections   results/detections.csv \
 		--data data/test_labeled.csv \
 		--out          results/
