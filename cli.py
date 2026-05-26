@@ -363,6 +363,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     # Optional anomaly score threshold override for Tool 2
     sp.add_argument("--threshold", type=float, default=None)
+
+    # Optional glob pattern for local client models to compare against global for Tool 2
+    sp.add_argument("--local-models", default=None)
+    
     # Directory where evaluation reports and metrics will be saved
     sp.add_argument("--out", default="results")
 
