@@ -244,8 +244,10 @@ IN PROGRESS - UPDATE and REMOVE when completed
 ### Option 1: Synthetic pipeline (any OS)
 
 ```bash
-git clone https://github.com/Bkishiyama/sdn-fl-detector.git
+git clone https://github.com/Bkishiyama/sdn-poison-guard.git
 cd sdn-fl-detector
+python3 -m venv venv
+source venv/bin/activate
 pip3 install -r requirements.txt
 make all
 ```
