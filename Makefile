@@ -52,6 +52,7 @@ detect:
 evaluate:
 	$(CLI) evaluate \
 		--detections   results/detections.csv \
+		--data data/test_labeled.csv \
 		--out          results/
 
 # Multi-round FL simulation
