@@ -97,9 +97,11 @@ IN PROGRESS - UPDATE and REMOVE when completed
 
 IN PROGRESS - UPDATE and REMOVE when completed
 
-This shows how each host will send its local training metric to the Controller. There is will be used to calculate the global ML model.
-If a host sends corrupted data, it will make the global model ineffective. So, it must be sanitized.
-After it the data from all clients is santized, with the use of Z-score calculations, the global model is generated to find incoming threats.
+Each host uses local Isolation Forest Training to detect anomalies. The model creates a metric and sends it to the Controller.
+The local metric is used to make the global ML model for threat detection.
+If a host sends corrupted data, it will make the global model ineffective. So, the metrics must be analyzed.
+If data appears out of the norm, it is removed.
+After the data is santized, with the use of Z-score calculations, the global model is generated to find incoming threats.
 
 ---
 
