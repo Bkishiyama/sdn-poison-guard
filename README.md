@@ -87,7 +87,6 @@ There is no lightweight, reproducible tool that:
 This project addresses this issue. 
 
 IN PROGRESS - UPDATE and REMOVE when completed
-
 ---
 
 ## Section II: System Design
@@ -102,7 +101,7 @@ This shows how each host will send its local training metric to the Controller. 
 If a host sends corrupted data, it will make the global model ineffective. So, it must be sanitized.
 After it the data from all clients is santized, with the use of Z-score calculations, the global model is generated to find incoming threats.
 
----
+------
 
 ### Architecture for Tool 1
 
