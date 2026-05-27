@@ -35,10 +35,12 @@ from __future__ import annotations
 
 import json
 import logging
+import sys
 import os
 import csv
 from datetime import datetime
 from typing import Dict, Optional
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Ryu imports — only available inside the Mininet/Ryu environment
 try:
