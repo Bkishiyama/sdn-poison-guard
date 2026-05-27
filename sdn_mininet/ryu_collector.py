@@ -63,7 +63,7 @@ from src.sanitizer import aggregate_with_sanitizer, SanitizationReport
 
 # from features.py, load extraction function that transforms raw data into ML features
 # for anamoly detection
-from src.features import extract_features  # noqa: F401 - available for live scoring
+from src.features import load_flows
 
 logger = logging.getLogger(__name__)
 
