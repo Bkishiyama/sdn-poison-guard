@@ -355,12 +355,14 @@ class FLSanitizerAPI(ControllerBase):
             return Response(
                 status=400,
                 content_type="application/json",
+				charset="utf-8",
                 body=json.dumps({"error": str(exc)}),
             )
 
         _upload_queue[host_id] = metric
         return Response(
             content_type="application/json",
+			charset="utf-8",
             body=json.dumps({
                 "status": "queued",
                 "host_id": host_id,
@@ -376,6 +378,7 @@ class FLSanitizerAPI(ControllerBase):
             return Response(
                 status=400,
                 content_type="application/json",
+				charset="utf-8",
                 body=json.dumps({"error": "Upload queue is empty"}),
             )
         result = {
@@ -387,6 +390,7 @@ class FLSanitizerAPI(ControllerBase):
         }
         return Response(
             content_type="application/json",
+			charset="utf-8",
             body=json.dumps(result),
         )
 
@@ -395,6 +399,7 @@ class FLSanitizerAPI(ControllerBase):
         """Return current queue and last known global model."""
         return Response(
             content_type="application/json",
+			charset="utf-8",
             body=json.dumps({
                 "queued_hosts": list(_upload_queue.keys()),
                 "queue_size": len(_upload_queue),
@@ -411,5 +416,6 @@ class FLSanitizerAPI(ControllerBase):
         _upload_queue.clear()
         return Response(
             content_type="application/json",
+			charset="utf-8",
             body=json.dumps({"status": "queue cleared"}),
         )
