@@ -2,15 +2,15 @@ from __future__ import annotations
 
 #!/usr/bin/env python3
 """
-sdn_mininet/ryu_collector.py: Ryu SDN Controller + Flow Stats Collector
-                               with Byzantine-Robust Model Poisoning Defense
+sdn_mininet/ryu_collector.py: Ryu SDN Controller + Flow Stats Collector 
+with Byzantine-Robust Model Poisoning Defense
 
 This Ryu app does three main jobs:
 1. Acts as a basic learning L2 switch (so hosts in Mininet can ping each other)
-2. Periodically collects OpenFlow flow statistics from all switches and saves
-   them as CSV files for our anomaly detection tool.
-3. Exposes REST endpoints for FL clients to upload local model metrics and
-   triggers sanitized aggregation to defend against model poisoning attacks.
+2. Periodically collects OpenFlow flow statistics from all switches and saves 
+them as CSV files for our anomaly detection tool.
+3. Exposes REST endpoints for FL clients to upload local model metrics and 
+triggers sanitized aggregation to defend against model poisoning attacks.
 
 The collected data is written to:
 data/live_client1.csv
@@ -18,10 +18,10 @@ data/live_client2.csv
 data/live_client3.csv
 
 REST API (runs on port 8080):
-    POST /fl/upload     -> client pushes local model metric
-    GET  /fl/aggregate  -> trigger sanitized aggregation
-    GET  /fl/status     -> query current global model state
-    GET  /fl/reset      -> clear upload queue for next FL round
+POST /fl/upload -> client pushes local model metric
+GET  /fl/aggregate -> trigger sanitized aggregation
+GET  /fl/status -> query current global model state
+GET  /fl/reset -> clear upload queue for next FL round
 
 Usage (run from project root):
 ryu-manager sdn_mininet/ryu_collector.py --observe-links
@@ -53,9 +53,9 @@ from src.features import load_flows  # available for live scoring
 
 
 # Configuration
-POLL_INTERVAL = 5   # How often to poll switches for flow stats (seconds)
-OUTPUT_DIR = "data" # Where to save the live CSV files
-MAX_ROWS = 5000     # Future: rotate files after this many rows
+POLL_INTERVAL = 5  # How often to poll switches for flow stats (seconds)
+OUTPUT_DIR = "data"  # Where to save the live CSV files
+MAX_ROWS = 5000  # Future: rotate files after this many rows
 
 # Map switch DPID to client name (easy to extend for bigger topologies)
 DPID_TO_CLIENT = {
@@ -112,6 +112,7 @@ class SDNSanitizerController(app_manager.RyuApp):
         self.logger.info(f"[Ryu] Zero-trust FL aggregation active — Z threshold: {Z_THRESHOLD}")
 
 
+	
     # Called when a switch connects to the controller
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
@@ -224,6 +225,7 @@ class SDNSanitizerController(app_manager.RyuApp):
         datapath.send_msg(req)
 
 
+	
     # Helper Functions
     # Install a flow entry on the switch.
     def _add_flow(self, datapath, priority, match, actions,
@@ -244,6 +246,7 @@ class SDNSanitizerController(app_manager.RyuApp):
         )
         datapath.send_msg(mod)
 
+	
     # Convert OpenFlow flow stat into a CSV row
     # Extract counters from an OFPFlowStats entry
     # Uses MAC addresses since L2 flows don't have IP match fields
@@ -293,6 +296,7 @@ class SDNSanitizerController(app_manager.RyuApp):
 
         return self._writers[client]
 
+	
     # Tool 2: sanitizer trigger called by REST API
     def run_sanitized_aggregation(self, z_threshold: float = Z_THRESHOLD):
         """
