@@ -630,6 +630,8 @@ Run `python3 cli.py <command> --help` for full options on any command.
 ## Repository Structure
 
 I use GitHub MCP Server to obtain the Repository Structure:
+
+```text
 sdn-poison-guard/
 ├── .dockerignore
 ├── .gitignore
@@ -679,6 +681,7 @@ sdn-poison-guard/
 │
 └── tests/
     └── test_sanitizer.py
+```
 
 1. The Core Data & Feature Pipeline
 
