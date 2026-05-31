@@ -4,7 +4,9 @@
 
 **Tool 2: Model Posioning Sanitizer**
 
-This tool extends my Tool 1 project from my sdn-fl-detector repository. Most files have not changed as I start off by copying my Tool 1 Repository here. My goal is to secure the machine learning (ML) pipeline. 
+Tool 2 was added to Tool 1, resulting in some residual Tool 1 components remaining in the codebase.
+Testing efforts will be limited to Tool 2, and Tool 1 features will not be evaluated. 
+My goal is to secure the machine learning (ML) pipeline in an Software Defined Network (SDN)/Federated Learning (FL) environment.
 
 Tool 1 detected threats in my Software Defined Network (SDN), created logs, and used the logs in my Federated Learaning (FL) model.
 Tool 2 defends the network against attackers who try to influence the FL model. 
@@ -627,7 +629,56 @@ Run `python3 cli.py <command> --help` for full options on any command.
 
 ## Repository Structure
 
-IN PROGRESS - UPDATE and REMOVE when completed
+I use GitHub MCP Server to obtain the Repository Structure:
+sdn-poison-guard/
+├── .dockerignore
+├── .gitignore
+├── Dockerfile
+├── Makefile
+├── README.md
+├── cli.py
+├── docker-compose.yml
+├── environment.yml
+├── install.sh
+├── requirements.txt
+│
+├── config/
+│   └── fed_config.yaml
+│
+├── docs/
+│   ├── Notes_incl_AI_use.md
+│   ├── networkv2.jpg
+│   ├── networkv3.jpg
+│   ├── ryu_controller.drawio.svg
+│   ├── sdn-fl-detector.drawio.svg
+│   ├── sdn-poison-guard.drawio.svg
+│   ├── sdn_fl_poison.drawio.svg
+│   ├── tool2add.drawio.svg
+│   └── tool2added.drawio.svg
+│
+├── scripts/
+│   ├── __init__.py
+│   └── generate_data.py
+│
+├── sdn_mininet/
+│   ├── __init__.py
+│   ├── label_window.py
+│   ├── poisoned_host.py
+│   ├── ryu_collector.py
+│   └── topology.py
+│
+├── src/
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── detect.py
+│   ├── evaluate.py
+│   ├── features.py
+│   ├── federated.py
+│   ├── local_train.py
+│   └── sanitizer.py
+│
+└── tests/
+    └── test_sanitizer.py
 
 1. The Core Data & Feature Pipeline
 
