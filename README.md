@@ -44,51 +44,56 @@ IN PROGRESS - UPDATE video and REMOVE when completed
 8. Repository Structure
 9. Known Issues
 
-IN PROGRESS - UPDATE and REMOVE when completed
-
 ---
 
 ## Section I: Problem Definition
 
 ### Problem Statement
 
-Software-Defined Networks (SDNs) generate large amounts of detailed network traffic data,
-that includes information about connections, packet flow, and communication patterns between devices. 
-However, labeled attack data is usually scarce and unevenly distributed. 
-In some cases, data may not be combined across organizations because of privacy, policy, or regulatory restrictions. 
-This makes it difficult to develop and train effective ML models for threat detection.
-
-IN PROGRESS - UPDATE and REMOVE when completed
+Software-Defined Networking (SDN) separates the control plane from the data plane.
+This  centralizes routing and forwarding decisions in a single, central controller.
+This design makes networks easier to program and manage at scale.
+However, it concentrates the intelligence or “brain” of the entire network into one reachable target - the controller.
+Attached to the controller are switches that are attached with unencrypted TCP channels. 
+This Tool addresses a distinct threat that exploit this network. The threat operates at the machine learning layer.
+Federated Learning (FL) is used to train a shared anomaly detection model that involves clients in the SDN.
+This means a malicious client can corrupt the global model by sending false metric updates to the central server.
+This is called a model poisoning attack. This is a critical gap in the SDN-FL model.
 
 ### Importance
 
-SDN controllers are central components in cloud and enterprise networks. 
-Attacks such as DDoS, port scanning, spoofing, and flow table exhaustion can hinder network communication. 
-To address these threats, organizations need scalable, data-driven anomaly detection systems that do not expose their sensitive data.
+SDN is used in big company data centers, cloud systems, and campus networks.
+It allows network administrators to control traffic from one place and program it easily.
+It is a central server and the “brains” of the network; this makes it a target for attacks.
+If someone successfully attacks the controller, it's not just one computer that is affected. The network traffic flows are compromised.
 
-IN PROGRESS - UPDATE and REMOVE when completed
+When organizations work together on machine learning projects, they have to trust each other.
+But what if one of them is not honest? This can happen in Federated Learning, where organizations share information to make a better model.
+This model can detect malicious traffic on the internet.
+If one organization is bad or hacked, they can secretly change the model so the central model does not work right. Part of FL models do not include error checking so other organizations may not know a global model is ineffective.
+Without a well-trained model, organizations could be at risk for attacks.  
+
 
 ### Existing Approaches
 
-| Approach | Tool Examples | Limitation |
-|---|---|---|
-| Signature-based IDS | Snort, Suricata | Misses zero day attacks |
-| Static threshold rules | Custom scripts, dashboards | High false-positive rate |
-| Centralized ML | Pooled NetFlow datasets | Requires raw data sharing |
-| Per-org ML | Custom models | Not enough data for effective detection |
-
-IN PROGRESS - UPDATE and REMOVE when completed
+To protect against model poisoning in federated learning, the main methods used are Byzantine-robust aggregation algorithms.
+The basic version is FedAvg that simply averages all updates from clients. Then, outliers are detected because they do not fall within those averages.
+Other alternatives are Krum, Trimmed Mean, and Median aggregation which also reduce look at the impact of statistical outliers before calculating the global update.
+This tool uses a Z-score sanitizer, which calculates the mean and standard deviation of the metrics submitted by clients.
+It then rejects any submission with a Z-score that is higher than a certain threshold, 1.5, or configured value.
+For example, submissions from a poisoned client with a very high anomaly score, like h6 with its score multiplied by 100, are identified and excluded before aggregation.
+This prevents the corrupted value from changing the global model. By doing this, the tool makes federated learning more secure and reliable.
+The Z-score sanitizer is a useful tool in this effort, as it filters out suspicious submissions and ensure that the global model is updated accurately.
+Overall, the goal is to prevent model poisoning and maintain the integrity of the aggregated FL model.
 
 ### The Issue
 
-There is no lightweight, reproducible tool that:
-- Works directly on **SDN-style flow logs**, e.g., bytes, packets, duration, ports, protocol
-- Trains **local unsupervised models** with no labels needed
-- Consolidates them using a **FL model** and does not exchange private data
+The issue for this tool highlights is a weakness in the security of FL systems, specifically between the part that uses machine learning and the part that creates a global model.
+The global model is sent back to the clients as it has been made better due to contributing organizational data.
+Tool 2 helps fix this by creating a better system to detect unusual activity - it starts with a basic model that can spot anomalies and then makes a global detection model stronger.
+This includes a sanitizer that can detect attacks from compromised clients.
+The goal is to catch any malicious updates that might be sent by an organization that is being malicious or has been hacked.
 
-This project addresses this issue. 
-
-IN PROGRESS - UPDATE and REMOVE when completed
 ---
 
 ## Section II: System Design
@@ -96,8 +101,6 @@ IN PROGRESS - UPDATE and REMOVE when completed
 ### Architecture for Tool 2
 
 ![Architecture Diagram](docs/sdn-poison-guard.drawio.svg)
-
-IN PROGRESS - UPDATE and REMOVE when completed
 
 Each host uses local Isolation Forest Training to detect anomalies. The model creates a metric and sends it to the Controller.
 The local metric is used to make the global ML model for threat detection.
@@ -112,14 +115,13 @@ After the data is santized, with the use of Z-score calculations, the global mod
 ![Architecture Diagram](docs/sdn-fl-detector.drawio.svg)
 
 In tool 1, data is generated by local hosts and sent to the central server.
-IN PROGRESS - UPDATE and REMOVE when completed
 
 ---
 ### Core Components
 
 ![Tool 2 added](docs/tool2add.drawio.svg)
 
-Tool 2's has added programs to Tool 1
+Tool 2's is added to the architecture.
 
 ---
 
