@@ -4,8 +4,8 @@
 
 **Tool 2: Model Posioning Sanitizer**
 
-Tool 2 was added to Tool 1, resulting in some residual Tool 1 components remaining in the codebase.
-Testing efforts will be limited to Tool 2, and Tool 1 features will not be evaluated. 
+Tool 2 was added to Tool 1, resulting in some Tool 1 remnants remaining in the files.
+Testing is limited to Tool 2, and Tool 1 will not be checked for functionality. 
 My goal is to secure the machine learning (ML) pipeline in an Software Defined Network (SDN)/Federated Learning (FL) environment.
 
 Tool 1 detected threats in my Software Defined Network (SDN), created logs, and used the logs in my Federated Learaning (FL) model.
@@ -15,7 +15,7 @@ Basically, it applies a Z-score anomaly detection uploads from the clients and d
 
 My Model Poisoning Sanitizer (sanitizer) relies on Byzantine Aggregation. This provides security to protect the FL model for poisoning attacks. In FL, a host can send bad training data to the central server. If the global ML model uses this data, the FL model becomes corrupted and produces an ineffective defense mechanism. The sanitizer will check data that the central server receives. It compares it with the group's data using the Z-score statistical technique. If the client's data does not match the group's data, the client data gets dropped before it gets fused into the FL model. If the client's data does not have abnormal data, it gets combined with the group's data. Federated Averaging (FedAvg) is used to create a new global model - one that can detect attacks for all clients. Meaning, the new global model is sent back to all clients so they can defend against zero day attacks. 
 
-The main contribution is using the Byzantine statistical filtering method within an SDN-FL environment. It is important to defend the FL pipeline against malicious clients who participate in training the global protection model. 
+The main contribution of this project is to use the Byzantine statistical filtering method within an SDN-FL environment. It is important to defend the FL pipeline against malicious clients and stop them from contributing to the global protection model. 
 
 ---
 
