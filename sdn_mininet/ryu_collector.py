@@ -3,12 +3,12 @@ from __future__ import annotations
 
 """ sdn_mininet/ryu_collector.py
 This is the Ryu SDN Controller with Flow Stats Collector, 
-and with Byzantine-Robust Model Poisoning Defense
-This Ryu app has three jobs:
-1. Learns all MAC to Port mappings. This allows hosts in Mininet to ping each other.
-2. Periodically collects OpenFlow flow statistics from all switches and saves 
-them as CSV files for my anomaly detection tool.
-3. Exposes REST endpoints for FL clients to upload local model metrics and 
+with Byzantine-Robust Model Poisoning Defense
+This Ryu app:
+1. Learns all MAC to Port mappings. Hosts in Mininet should ping each other.
+2. Collects OpenFlow flow stats from all switches and saves them as CSV files
+for my anomaly detection tool.
+3. Provides REST endpoints so FL clients can upload local model metrics and 
 then sanitizes aggregation to thwart model poisoning attacks.
 
 The collected data is written to:
