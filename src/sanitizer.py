@@ -1,7 +1,6 @@
 from __future__ import annotations
 #!/usr/bin/env python3
-
-# top, required for Python versions < 3.10. It makes annotations act as strings
+# import annots required for Python versions < 3.10. It makes annotations act as strings
 """  src/sanitizer.py
 Purpose: This program checks client's updates for model poisoning attacks.
 If detected, the offending client is dropped from the aggregation.
