@@ -1,30 +1,26 @@
-"""
-mininet/topology.py: SDN Lab Topology for Mininet
+from __future__ import annotations
+#!/usr/bin/env python3
 
+""" mininet/topology.py
+SDN Lab Topology for Mininet
 Creates a 3-switch topology where each switch represents a different
 "organization" (federated client).  Hosts generate both benign and
 attack traffic so the Ryu collector captures a realistic mix.
-
 See README for topology.
-
 Traffic generated:
 Benign: iperf3 TCP/UDP streams, ping, curl-like HTTP
 DDoS: hping3 SYN flood from h4 -> h1
 Scan: nmap port scan from h6 -> h1..h5
-
 Usage:
 sudo python3 mininet/topology.py [--attack]
   --attack   also launch attack traffic generators (default: benign only)
   --time N   run for N seconds (default: 60)
-
-Requirements (installed by install.sh):
-  Mininet, hping3, nmap, iperf3
+Requirements (installed by install.sh): Mininet, hping3, nmap, iperf3
 """
 
 import argparse
 import sys
 import time
-
 from mininet.log import setLogLevel, info
 from mininet.net import Mininet
 from mininet.node import RemoteController
