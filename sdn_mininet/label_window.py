@@ -1,20 +1,16 @@
 from __future__ import annotations
-
 #!/usr/bin/env python3
-"""
-mininet/label_window.py
-Post-Run Attack Labeler
-This script adds labels to SDN flow data captured from live Mininet runs.
 
-After running an experiment with attacks, use this tool to mark 
-which flows happened during the attack window as malicious (label=1).
-
-Common usage:
-  python3 mininet/label_window.py --file data/live_client1.csv \
-    --start "2026-05-18T14:30:00" --end "2026-05-18T14:35:00"
-
-Or label everything (if the whole capture was an attack):
-  python3 mininet/label_window.py --file data/attack_only.csv --all --label 1
+""" mininet/label_window.py
+Post-Run Attack Labeler: This script adds labels to SDN flow data
+captured from the Mininet runs. After running an experiment with 
+attacks, use this tool to mark which flows happened during the 
+attack window as malicious (label=1).
+Usage:
+python3 mininet/label_window.py --file data/live_client1.csv \
+  --start "2026-05-18T14:30:00" --end "2026-05-18T14:35:00"
+or label everything since my whole capture is an attack:
+python3 mininet/label_window.py --file data/attack_only.csv --all --label 1
 """
 
 import argparse
@@ -74,6 +70,8 @@ def label_window(file: str, start: str | None, end: str | None,
 
 
 if __name__ == "__main__":
+    # Create and configure the command-line parser, including all
+    # supported commands and their options.  
     parser = argparse.ArgumentParser(
         description="Label attack flows in live-captured SDN CSV files by time window",
         formatter_class=argparse.RawDescriptionHelpFormatter
