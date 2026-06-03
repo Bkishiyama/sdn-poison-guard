@@ -351,57 +351,23 @@ IN PROGRESS - UPDATE and REMOVE when completed
 
 ## Quick Start
 
-IN PROGRESS - UPDATE and REMOVE when completed
+There are three options to run this program. Method 1 is the best way to observe what is going on. 
+Method 2 uses Docker and the easiest method to see the program run. 
+Method 3 is the method I use to build and test my system.
 
-
-
-
-
-### Option 3: Live Mininet + Ryu (Ubuntu 20.04 VM only)
-
-```bash
-git clone https://github.com/Bkishiyama/sdn-fl-detector.git
-cd sdn-fl-detector
-chmod +x install.sh
-./install.sh
-```
-
-Then follow the Live Mode steps below.
-
----
-
-## Installation
-IN PROGRESS - UPDATE and REMOVE when completed
 ### Requirements
 
 - Python 3.8+
 - Ubuntu 20.04 (for live Mininet mode only)
 - Docker (for Docker mode only)
 
-### pip
-
-```bash
-pip3 install -r requirements.txt
-```
-
-### Conda
-
-```bash
-conda env create -f environment.yml
-conda activate sdn-fl-env
-```
-
-### Verify
-
-```bash
-python3 cli.py --help
-```
-
 ---
 
 ## How to Run
 
 ### Method 1: Synthetic Pipeline (any OS)
+
+For this method, you will need Python 3.8+ on any OS.
 
 #### Step 1: Clone the repository
 
@@ -435,8 +401,9 @@ See results in the ~/sdn-poison-guard/results folder
 
 ---
 ### Method 2: Docker
-IN PROGRESS - UPDATE and REMOVE when completed
 
+In this method, you will need Docker installed on your machine. I provide Step 1 on how to install it.
+I recently installed Docker on Ubuntu 24.04 and tested it.
 
 #### Step 1: Install Docker**
 
@@ -535,7 +502,7 @@ docker compose download
 
 ### Method 3: Live Mode (Mininet + Ryu, Ubuntu 20.04)
 
-> **Note:**  Mininet live mode requires Ubuntu 20.04 natively. Use Docker to run the synthetic pipeline only.
+> **Note:**  Mininet mode requires Ubuntu 20.04 natively.
 
 #### Topology
 
