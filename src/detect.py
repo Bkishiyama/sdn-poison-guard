@@ -1,7 +1,8 @@
 from __future__ import annotations
+#!/usr/bin/env python3
 
-"""
-detect.py - Anomaly Detection Engine
+""" detect.py
+Anomaly Detection Engine
 I adjusted the parameters since my f1, precision, etc. came back as zero.
 Loads a trained model bundle and scores new SDN flow logs.
 Supports both the global federated model and single local client models.
@@ -15,11 +16,8 @@ Each scored flow gets three extra columns:
 import joblib
 import numpy as np
 import pandas as pd
-
 from .features import load_flows, preprocess
 from .federated import federated_score_ensemble
-
-
 
 """
 Score SDN flows using the global federated model.
@@ -32,7 +30,6 @@ flows, automatically falls back to the 5th percentile of the
 actual scores so results are never all zero.
 - top_n: if set, print the N most anomalous flows to stdout
 - verbose: print progress messages
-
 - Returns:
 df : original DataFrame with anomaly_score, is_anomaly, anomaly_rank added
 """
@@ -113,14 +110,12 @@ def detect(
 Score flows using a single local client model.
 Used during evaluation to compare individual clients against the
 federated global model.
-
 Parameters:
 - model_path: path to a local client model bundle (.pkl)
 - data_path: path to the CSV flow log to score
 - threshold: anomaly score cutoff. If None, uses the model's stored p5 
 score. Falls back to p5 of actual scores if nothing is flagged.
 - verbose: print progress messages
-
 Returns:
 - df : original DataFrame with anomaly_score, is_anomaly, anomaly_rank added
 """
