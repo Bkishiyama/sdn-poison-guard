@@ -1,14 +1,11 @@
 from __future__ import annotations
-
 #!/usr/bin/env python3
-"""
-federated.py
 
+""" federated.py
 This file handles the Federated Learning setup for SDN anomaly detection.
 Since we can't directly average Isolation Forest trees:
 1. Score Ensemble (default) -> average scores from all clients
 2. Threshold Consensus -> average the anomaly thresholds from each client
-
 Tool 2 extends this file with:
 - Byzantine-robust Z-score sanitization before aggregation
 - Poisoned client injection for attack simulation
@@ -21,10 +18,8 @@ import csv
 import joblib
 import numpy as np
 from typing import Optional
-
 # Tool 2: import sanitizer
 from src.sanitizer import aggregate_with_sanitizer, SanitizationReport
-
 
 # Load multiple client model files using a glob pattern
 def load_client_models(pattern: str):
@@ -41,9 +36,7 @@ def load_client_models(pattern: str):
     return models, paths
 
 
-
 # Scoring strategies
-
 
 # Strategy A: Average anomaly scores from all client models
 def federated_score_ensemble(
@@ -75,7 +68,6 @@ def federated_threshold_consensus(client_models: list[dict]) -> float:
     print(f"[FedAgg] Global consensus threshold: {global_threshold:.4f}")
     
     return global_threshold
-
 
 
 # Aggregate and save global model
