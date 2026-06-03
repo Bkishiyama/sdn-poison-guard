@@ -1,13 +1,12 @@
-"""
-src/sanitizer.py
-Purpose: check client's updates for model poisoning attacks.
-If detected, drop the offending client from the aggregation.
+from __future__ import annotations
+#!/usr/bin/env python3
+
+# top, required for Python versions < 3.10. It makes annotations act as strings
+"""  src/sanitizer.py
+Purpose: This program checks client's updates for model poisoning attacks.
+If detected, the offending client is dropped from the aggregation.
 If not detected, aggregate the client's updates into the global model.
 """
-
-# required for Python versions < 3.10
-# makes all type annotations in this file behave like strings
-from __future__ import annotations
 
 import math
 import logging
@@ -18,11 +17,10 @@ from dataclasses import dataclass, field
 logger = logging.getLogger(__name__)
 
 # Constants
-DEFAULT_Z_THRESHOLD: float = 2.0  # Standard threshold to catch gross outliers or attack Z ≫ 2
+DEFAULT_Z_THRESHOLD: float = 2.0  # Threshold to catch outliers or attack Z ≫ 2
 LARGE_GROUP_Z_THRESHOLD: float = 2.0  # looser threshold for larger FL groups
 LARGE_GROUP_SIZE: int = 10  # groups above this will use LARGE_GROUP_Z_THRESHOLD
 MIN_HOSTS_FOR_STATS: int = 3  # Minimum hosts needed for Z-score calculation
-
 
 # Data classes
 # for each client, store the host_id, value, z_score, and whether it was accepted or rejected
@@ -75,7 +73,7 @@ class SanitizationReport:
 
 
 ''' Scalar Sanitizer
-Add and aggregate client updates to the FL model but eliminate abnormalities by using Z-score outlier filtering
+Add and aggregate client updates to the FL model; eliminate abnormalities by using Z-score outlier filtering
 Parameter: key (str) is the host_id
 Parameter: value (float) is the scalar value of the host's update
 This is the central server's entry point where each client uploads a single scalar value.
@@ -232,7 +230,7 @@ def aggregate_with_sanitizer(
 
 
 '''
-A function that is a extended version of the Z-score filtering loop. Each clients sends
+This function is an extended version of the Z-score filtering loop. Each clients sends
 a list of numbers as a vector or parameter array, and not a single number. This will
 remove malicious clients before building a global model. Basically, this deals with
 clients that upload all of the Isolation Forest parameters and not a single metric.
