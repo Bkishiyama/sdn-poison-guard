@@ -400,24 +400,36 @@ python3 cli.py --help
 ---
 
 ## How to Run
-IN PROGRESS - UPDATE and REMOVE when completed
+
 ### Method 1: Synthetic Pipeline (any OS)
+
+#### Step 1: Clone the repository
 
 ```bash
 git clone https://github.com/Bkishiyama/sdn-poison-guard.git
 cd sdn-fl-detector
+```
+
+#### Step 2: Activate Venv
+
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
+
+#### Step 3: Install requirements
+
+```bash
 pip3 install -r requirements.txt
 ```
 
-Run everything in one command:
+#### Step 4: Run everything in one command
 
 ```bash
 make all
 ```
 
-# Evaluate
+#### Step 5: Evaluate Results
 
 See results in the ~/sdn-poison-guard/results folder 
 
@@ -428,9 +440,10 @@ IN PROGRESS - UPDATE and REMOVE when completed
 
 #### Step 1: Install Docker**
 
-Go to the website and install Docker on Windows, Linux, or MAC
+Go to the website and install Docker on Windows, Linux, or MAC.
 
-For example, I used this to install on Linux, Ubuntu 24.04
+For example, I installed Docker on Ubuntu 24.04:  
+[Docker Installation un Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 
 **1. Set up Docker apt repository**
 ```
@@ -476,23 +489,27 @@ sudo systemctl start docker
 sudo systemctl enable docker
 ```
 
-### Option 2: Docker (any OS, no Python needed)
+### Run Program via Docker (any OS, no Python needed)
 
+After Docker is installed, use it to run my program:
+
+#### Step 1: Run Docker
+
+For Linux only and not required for Windows or macOS
 ```bash
-git clone https://github.com/Bkishiyama/sdn-poison-guard.git
-cd sdn-poison-guard
-docker compose up
+sudo systemctl start docker 
+sudo systemctl enable docker
 ```
 
 #### Step 2: Add yourself to the Docker group
 
+For Linux only
 ```bash
 sudo usermod -aG docker $USER
 newgrp docker
 ```
 
-#### Step 3: Clone the repo
-
+#### Step 3: Clone the Repository
 ```bash
 git clone https://github.com/Bkishiyama/sdn-poison-guard.git
 cd sdn-poison-guard
