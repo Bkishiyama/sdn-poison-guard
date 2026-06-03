@@ -1,15 +1,12 @@
 from __future__ import annotations
 #!/usr/bin/env python3
-"""
-scripts/generate_data.py -> Synthetic SDN Flow Log Generator
 
-This script creates fake but realistic SDN flow data for testing our 
-FL anomaly detection system.
-
+"""  scripts/generate_data.py
+Synthetic SDN Flow Log Generator: This script creates fake but realistic 
+SDN flow data for testing my FL anomaly detection system.
 It generates:
 - Normal (benign) traffic
 - Different types of attacks (DDoS, port scans, flow table exhaustion)
-  
 Each client gets slightly different attack patterns to simulate 
 real-world non-IID data in federated learning.
 """
