@@ -707,13 +707,13 @@ The Federated Learning architecture splits the workload between individual local
       - **Threshold Consensus** acts like a democratic vote where the majority must agree before officially declaring the data as a cyber attack.
   - This process is the core of Federated Learning. It creates a massive, network wide protection shield; every participant benefits from the collective knowledge of the entire group. They will be able to spot advanced threats like DDoS attacks together while keeping their own local data and completely private and secure.
 ---
-  2.5 The Zero-Trust Security Guard
+  3. The Zero-Trust Security Guard
   
   This is Tool 2 that I am adding to Tool 1.  
   - src/sanitizer.py
     -  This program (Step 4.5) is next in the pipeline. Before the coordinator runs the Score Ensemble or Threshold Consensus, it inspects the client data that it receives. When it receives data from a client, the data is compared against the groups data by using a Z-score. The Z-score measures client values against the group's values and determines if there are any deviations. If there are deviations, the data is dropped and data gets logged as a security violation. This way, the data is not injected into the FL model. The FL model is forumulated without corrupted data and thus remains reliable. 
 ---
-3. Detection & Evaluation
+4. Detection & Evaluation
 
 Once the global federated model is built, it needs to be put to work and its performance measured.
   -	src/detect.py 
@@ -742,7 +742,7 @@ Once the global federated model is built, it needs to be put to work and its per
       - Vector sanitation for hosts that upload an array of parameters instead of a single number.
     - Usage: python3 -m pytest tests/test_sanitizer.py -v      
 ---
-4. SDN Integration Real Network Emulation 
+5. SDN Integration Real Network Emulation 
 
 The core pipeline can run on synthetic data. The sdn_mininet/ module is used to bridge the gap between simulation and a real SDN environment by using Mininet and a Ryu controller.
   - sdn_mininet/topology.py 
@@ -755,7 +755,7 @@ The core pipeline can run on synthetic data. The sdn_mininet/ module is used to 
   - sdn_mininet/label_window.py 
     - After a Mininet experiment finishes running, this program acts as a post-processing annotator. Because the traffic generator in topology.py knows when an attack started and stopped, this program takes the raw CSV of collected flows. It then reviews it and stamps each time window with the correct label, as either "benign" or the specific attack type that was active during that period. This labeled dataset is what gets forwarded to src/features.py for feature extraction. This finishes the bridge between live SDN emulation and machine learning pipeline.
 ---
-5. Execution, Orchestration & Environment
+6. Execution, Orchestration & Environment
 
 These files handle the user interface, automation, environment setup, and containerization of the project.
   -	cli.py (root entry point) 
@@ -782,7 +782,7 @@ These files handle the user interface, automation, environment setup, and contai
   - .gitignore
     - This file tells Git which files and folders to leave out of version control. For this project, it excludes the three generated runtime directories, data/, models/, and results/. Theire contents are re-creatable by simply running the pipeline and would increase the repository unnecessarily. It also excludes Python cache folders (__pycache__), compiled bytecode (.pyc files), and local environment folders created by pip or Conda.  
 ---
-6. Generated Data Directories
+7. Generated Data Directories
 
 These three folders are not committed to the repository and are created automatically when the pipeline runs.
   -	data/ 
@@ -792,7 +792,7 @@ These three folders are not committed to the repository and are created automati
   -	results/ 
     - This folder collects and stores all outputs produced by src/evaluate.py, which includes the confusion matrix images, performance bar charts, and any saved metric reports.
 ---
-7. Documentation
+8. Documentation
   -	README.md 
     - The documentation guide containing setup instructions, structural overviews, and evaluation metrics to verify the project is working exactly as intended.
 ---
