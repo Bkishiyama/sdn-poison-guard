@@ -1,12 +1,10 @@
 from __future__ import annotations
-
 #!/usr/bin/env python3
-"""
-evaluate.py — Model Evaluation Script
 
+""" evaluate.py
+Model Evaluation Script
 This file compares our anomaly detection predictions against 
 ground-truth labels (used only for testing; never during training).
-
 Calculate metrics like Accuracy, Precision, Recall, and F1.
 Generate confusion matrices and comparison chart.
 """
@@ -31,7 +29,6 @@ try:
 except ImportError:
     _PLOTTING = False
     print("[Warning] matplotlib/seaborn not installed. Plots will be skipped.")
-
 
 
 # Compute metrics
@@ -75,7 +72,6 @@ def compute_metrics(
     return result
 
 
-
 # Compare multiple models
 # Create a summary table of different models
 def compare_setups(results: list[dict]) -> pd.DataFrame:
@@ -87,7 +83,6 @@ def compare_setups(results: list[dict]) -> pd.DataFrame:
         rows.append(row)
     
     return pd.DataFrame(rows)
-
 
 
 # Plot and save a confusion matrix heatmap
@@ -124,7 +119,6 @@ def plot_confusion_matrix(
         print(f"[Eval] Saved confusion matrix -> {out_path}")
     else:
         plt.show()
-    
     plt.close(fig)
 
 
@@ -152,9 +146,7 @@ def plot_comparison_bar(
     for bar, val in zip(bars, values):
         ax.text(bar.get_x() + bar.get_width()/2, val + 0.01,
                 f"{val:.3f}", ha="center", va="bottom", fontsize=10)
-
     plt.tight_layout()
-    
     if out_path:
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
         fig.savefig(out_path, dpi=150)
