@@ -1,9 +1,8 @@
 from __future__ import annotations
-
 #!/usr/bin/env python3
-"""
-features.py — SDN Flow Log Feature Extraction
 
+""" features.py
+SDN Flow Log Feature Extraction
 This file is responsible for loading raw SDN flow data from CSV files 
 and turning it into clean numeric features for our models to use.
 - Loads and cleans the data
