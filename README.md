@@ -353,24 +353,9 @@ IN PROGRESS - UPDATE and REMOVE when completed
 
 IN PROGRESS - UPDATE and REMOVE when completed
 
-### Option 1: Synthetic pipeline (any OS)
 
-```bash
-git clone https://github.com/Bkishiyama/sdn-poison-guard.git
-cd sdn-fl-detector
-python3 -m venv venv
-source venv/bin/activate
-pip3 install -r requirements.txt
-make all
-```
 
-### Option 2: Docker (any OS, no Python needed)
 
-```bash
-git clone https://github.com/Bkishiyama/sdn-fl-detector.git
-cd sdn-fl-detector
-docker compose up
-```
 
 ### Option 3: Live Mininet + Ryu (Ubuntu 20.04 VM only)
 
@@ -416,42 +401,36 @@ python3 cli.py --help
 
 ## How to Run
 IN PROGRESS - UPDATE and REMOVE when completed
-### Method 1: Synthetic Pipeline
+### Method 1: Synthetic Pipeline (any OS)
 
 ```bash
-# Generate synthetic SDN flow data
-python3 cli.py generate-data --out-dir data/ --n-clients 3 --n-benign 2000 --n-attack 400
-
-# Train local models
-python3 cli.py train-local --data data/client1.csv --out models/client1.pkl --client-id client1
-python3 cli.py train-local --data data/client2.csv --out models/client2.pkl --client-id client2
-python3 cli.py train-local --data data/client3.csv --out models/client3.pkl --client-id client3
-
-# Aggregate into global federated model
-python3 cli.py federated-aggregate --models "models/client*.pkl" --out models/global.pkl
-
-# Detect anomalies
-python3 cli.py detect --model models/global.pkl --data data/new_flows.csv --top-n 10 --out results/detections.csv
-
-# Evaluate
-python3 cli.py evaluate --model models/global.pkl --data data/test_labeled.csv \
-                        --local-models "models/client*.pkl" --out results/
+git clone https://github.com/Bkishiyama/sdn-poison-guard.git
+cd sdn-fl-detector
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
 ```
 
-Or run everything in one command:
+Run everything in one command:
 
 ```bash
 make all
 ```
 
+# Evaluate
+
+See results in the ~/sdn-poison-guard/results folder 
+
 ---
 ### Method 2: Docker
 IN PROGRESS - UPDATE and REMOVE when completed
+
+
 #### Step 1: Install Docker**
 
 Go to the website and install Docker on Windows, Linux, or MAC
 
-Example install on Linux, Ubuntu 24.04
+For example, I used this to install on Linux, Ubuntu 24.04
 
 **1. Set up Docker apt repository**
 ```
@@ -492,8 +471,17 @@ sudo systemctl status docker
 ```
 
 >[!Note]If it is not running, start it, then run hello world
-```bash
+```bash for Linux users only
 sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+### Option 2: Docker (any OS, no Python needed)
+
+```bash
+git clone https://github.com/Bkishiyama/sdn-poison-guard.git
+cd sdn-poison-guard
+docker compose up
 ```
 
 #### Step 2: Add yourself to the Docker group
@@ -506,8 +494,8 @@ newgrp docker
 #### Step 3: Clone the repo
 
 ```bash
-git clone https://github.com/Bkishiyama/sdn-fl-detector.git
-cd sdn-fl-detector
+git clone https://github.com/Bkishiyama/sdn-poison-guard.git
+cd sdn-poison-guard
 ```
 
 #### Step 4: Build and Run
@@ -526,11 +514,11 @@ Results are printed to your screen and also saved to `./results/` on your host m
 docker compose download
 ```
 
-> **Note:** Docker runs the synthetic pipeline only. Mininet live mode requires Ubuntu 20.04 natively.
-
 ---
 
 ### Method 3: Live Mode (Mininet + Ryu, Ubuntu 20.04)
+
+> **Note:**  Mininet live mode requires Ubuntu 20.04 natively. Use Docker to run the synthetic pipeline only.
 
 #### Topology
 
@@ -538,55 +526,51 @@ docker compose download
 
 #### Step-by-Step
 
-**Step 1: Install (one time):**
+**Step 1: Clone the Repo:**
 ```bash
+git clone https://github.com/Bkishiyama/sdn-poison-guard.git
+cd sdn-poison-guard
+```
+
+**Step 2: Install (one time):**
+```bash
+cd sdn-poison-guard
 chmod +x install.sh
 ./install.sh
+```
+
+**Step 3: Reload PATH:**
+```bash
 source ~/.bashrc
 ```
 
-**Step 2: Terminal 1, start Ryu:**
+**Step 4: Terminal 1, start Ryu:**
 ```bash
-cd ~/sdn-fl-detector
+cd sdn-poison-guard
 ryu-manager sdn_mininet/ryu_collector.py --observe-links
 ```
 
 **Step 3: Terminal 2, start Mininet:**
 ```bash
-cd ~/sdn-fl-detector
-sudo python3 sdn_mininet/topology.py --time 120 --attack
+cd sdn-poison-guard
+sudo python3 sdn_mininet/topology.py
 ```
 
-**Step 4: Terminal 3, watch flows:**
+**Step 6: Send data flow info to controller**
 ```bash
-watch -n 5 wc -l ~/sdn-fl-detector/data/live_client*.csv
+# normal traffic on h1-h5
+python3 sdn_mininet/poisoned_host.py --host h1 --no-poison --controller-ip 127.0.0.1
+python3 sdn_mininet/poisoned_host.py --host h2 --no-poison --controller-ip 127.0.0.1
+python3 sdn_mininet/poisoned_host.py --host h3 --no-poison --controller-ip 127.0.0.1
+python3 sdn_mininet/poisoned_host.py --host h4 --no-poison --controller-ip 127.0.0.1
+python3 sdn_mininet/poisoned_host.py --host h5 --no-poison --controller-ip 127.0.0.1
+# h6 is the poisoner
+python3 sdn_mininet/poisoned_host.py --host h6 --multiplier 100 --controller-ip 127.0.0.1
 ```
 
-**Step 5: Label attack flows**
-Use timestamp printed in Terminal 2:
+**Step 7: Trigger aggreation and watch h6 get dropped**
 ```bash
-python3 sdn_mininet/label_window.py \
-  --file data/live_client2.csv \
-  --all \
-  --label 1
-```
-  
-(Optional) To narrow the time frame
-```bash
-python3 sdn_mininet/label_window.py \
-  --file data/live_client2.csv \
-  --start "YYYY-MM-DDTHH:MM:SS" \
-  --end   "YYYY-MM-DDTHH:MM:SS" \
-  --label 1
-```
-
-**Step 6: Train, aggregate, detect:**
-```bash
-python3 cli.py train-local --data data/live_client1.csv --out models/live_c1.pkl --client-id live_c1
-python3 cli.py train-local --data data/live_client2.csv --out models/live_c2.pkl --client-id live_c2
-python3 cli.py train-local --data data/live_client3.csv --out models/live_c3.pkl --client-id live_c3
-python3 cli.py federated-aggregate --models "models/live_*.pkl" --out models/live_global.pkl
-python3 cli.py detect --model models/live_global.pkl --data data/live_client2.csv --top-n 10
+curl http://127.0.0.1:8080/fl/aggregate
 ```
 
 **Step 7: Evaluate:**
@@ -599,6 +583,8 @@ python3 cli.py evaluate --model models/live_global.pkl --data data/live_client2.
 ```bash
 nautilus results/live/
 ```
+
+Results will be in the ~/sdn-poison-guard/results folder
 
 **Cleanup after each run:**
 ```bash
