@@ -132,8 +132,10 @@ def simulate_fl_rounds(
 ):
     # Simulate multiple rounds of federated learning for testing
     from src.local_train import train_local   # Import here to avoid circular imports
-
-    os.makedirs(model_dir, exist_ok=True)  # ************************************************************************************
+    
+    # redirect so as to save global model in a separate directory, ln 208  
+    os.makedirs(model_dir, exist_ok=True)
+    os.makedirs(os.path.join(model_dir, "global_rounds"), exist_ok=True)
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
     round_results = []
@@ -203,7 +205,8 @@ def simulate_fl_rounds(
             print(f"[FedAgg] Global threshold: {global_threshold:.4f}")
 
         # Save global model bundle for this round
-        global_out = os.path.join(model_dir, f"round{r}_global.pkl")   # *******************************************************************
+        # changed to save global model to a separate directory, ln 136
+        global_out = os.path.join(model_dir, "global_rounds", f"round{r}_global.pkl") 
         global_bundle = {
             "global_threshold": global_threshold,
             "round": r,
