@@ -20,7 +20,7 @@ client_ids:
   - client6
 
 # FL parameters
-n_rounds: 3  # number of FL aggregation rounds
+n_rounds: 3  # number of FL aggregation rounds <---------- set default to 3
 n_estimators: 100 # Isolation Forest trees per client per round
 
 # Output
