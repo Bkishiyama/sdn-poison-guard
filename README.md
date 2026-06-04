@@ -488,16 +488,62 @@ cd sdn-poison-guard
 #### Step 4: Build and Run
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
-#### Step 5: View results
+#### Step 5: Start CLI
+
+```bash
+docker compose run tool bash
+```
+
+#### Step 6: Generate Data
+
+In this step, you may change the benign (2000) and malicious (400) traffic that flows through via flags. Using 6 clients should produce results but you may change this.
+
+```bash
+python3 cli.py generate-data --out-dir data/ --n-clients 6 --n-benign 2000 --n-attack 400
+```
+
+#### Step 7: Train all six clients
+
+```bash
+python3 cli.py train --data data/client1.csv --out models/client1.pkl --client-id client1  
+python3 cli.py train --data data/client2.csv --out models/client2.pkl --client-id client2  
+python3 cli.py train --data data/client3.csv --out models/client3.pkl --client-id client3  
+python3 cli.py train --data data/client4.csv --out models/client4.pkl --client-id client4  
+python3 cli.py train --data data/client5.csv --out models/client5.pkl --client-id client5  
+python3 cli.py train --data data/client6.csv --out models/client6.pkl --client-id client6  
+```
+
+#### Step 8: Run the demo
+
+```bash
+python3 cli.py demo
+```
+
+#### Step 9 (optional): Run the attack with sanitization
+
+This will simulate an FL model that runs three times. Client 6 will multiply metric by 100.
+
+```bash
+python3 cli.py simulate-fl --config config/fed_config.yaml --poison client6:100
+```
+
+#### Step 10 (optional): Run the attach without sanitization
+
+```bash
+python3 cli.py simulate-fl --config config/fed_config.yaml --poison client6:100 --no-sanitize
+```
+
+#### Step 11: View results
 
 Results are printed to your screen and also saved to `./results/` on your host machine.
 
-#### Step 6: Clean up
+#### Step 12: Clean up
 
 ```bash
+exit  
 docker compose download
 ```
 
