@@ -530,7 +530,7 @@ This will simulate an FL model that runs three times. Client 6 will multiply met
 python3 cli.py simulate-fl --config config/fed_config.yaml --poison client6:100
 ```
 
-#### Step 10 (optional): Run the attach without sanitization
+#### Step 10 (optional): Run the attack without sanitization
 
 ```bash
 python3 cli.py simulate-fl --config config/fed_config.yaml --poison client6:100 --no-sanitize
@@ -589,7 +589,7 @@ cd sdn-poison-guard
 sudo python3 sdn_mininet/topology.py
 ```
 
-**Step 6: Send data flow info to controller**
+**Step 4: Terminal 3: Send data flow info to controller**
 ```bash
 # normal traffic on h1-h5
 python3 sdn_mininet/poisoned_host.py --host h1 --no-poison --controller-ip 127.0.0.1
@@ -601,18 +601,12 @@ python3 sdn_mininet/poisoned_host.py --host h5 --no-poison --controller-ip 127.0
 python3 sdn_mininet/poisoned_host.py --host h6 --multiplier 100 --controller-ip 127.0.0.1
 ```
 
-**Step 7: Trigger aggreation and watch h6 get dropped**
+**Step 5: Trigger aggreation and watch h6 get dropped**
 ```bash
 curl http://127.0.0.1:8080/fl/aggregate
 ```
 
-**Step 7: Evaluate:**
-```bash
-python3 cli.py evaluate --model models/live_global.pkl --data data/live_client2.csv \
-                        --local-models "models/live_c*.pkl" --out results/live/
-```
-
-**Step 8: View results:**
+**Step 6: View results:**
 ```bash
 nautilus results/live/
 ```
