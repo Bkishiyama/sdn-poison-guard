@@ -779,4 +779,6 @@ IN PROGRESS - UPDATE and REMOVE when completed
 | Offline evaluation | Static CSV logs; not integrated with a live SDN controller |
 | Manual attack labeling | Must note timestamp and run label_window.py after the run |
 | Python 3.8 compatibility | All files use `from __future__ import annotations` for type hint support |
+| FL updates | Local models do not improve | Global model does not update local hosts after aggregation |
+| Test rejection | Needs more client data | Lower Z threshold to 1.0 in fed_config.yaml |
 
