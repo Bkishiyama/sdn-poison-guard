@@ -36,6 +36,7 @@ COPY scripts/   ./scripts/
 COPY config/    ./config/
 COPY sdn_mininet/   ./sdn_mininet/
 COPY cli.py     .
+COPY Makefile   .
 
 # Create directories
 RUN mkdir -p data models results
