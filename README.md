@@ -25,7 +25,7 @@ IN PROGRESS - UPDATE and REMOVE when completed
 
 Watch my videos:
 
-> 🎥 [Tool 2 via Docker](https://youtu.be/tjNrIUR2QF8)
+> 🎥 [Tool 2 via Docker](https://youtu.be/tjNrIUR2QF8)  
 > 📚 with [Docker copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBxFV_-40aQSa3BvgeqDihWAcOWei324maMH5V0NXN9Vuo?e=OBppjT)
 
 IN PROGRESS - UPDATE video and REMOVE when completed
