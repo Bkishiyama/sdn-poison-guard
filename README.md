@@ -2,7 +2,7 @@
 
 # SDN Federated Learning Model with Poisoning Guard
 
-**Tool 2: Model Posioning Sanitizer**
+**Tool 2: Model Poisoning Sanitizer**
 
 Tool 2 was added to Tool 1, resulting in some Tool 1 remnants remaining in the files.
 Testing is limited to Tool 2, and Tool 1 will not be checked for functionality. 
