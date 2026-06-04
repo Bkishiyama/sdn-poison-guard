@@ -25,8 +25,8 @@ IN PROGRESS - UPDATE and REMOVE when completed
 
 Watch my videos:
 
-> 🎥 [SDN FL Anomaly Detection Tool](https://youtu.be/ba_NrpwrSyE)  
-> 📚 with [Docker copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQD-QWe9zvwpRKE1oNgw0TT4ATfUrsw-xcZuEtRkoxQL8yA?e=jBDDw0)
+> 🎥 [Tool 2 via Docker](https://youtu.be/tjNrIUR2QF8)
+> 📚 with [Docker copy-and-paste commands]()
 
 IN PROGRESS - UPDATE video and REMOVE when completed
 
