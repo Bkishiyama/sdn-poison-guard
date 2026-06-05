@@ -27,14 +27,14 @@ Watch my videos:
 
 IN PROGRESS - UPDATE video and REMOVE when completed
 
-> 🎥 [Tool 2 via Docker](https://youtu.be/d7MgydfTaek)
-> 
+> 🎥 [Tool 2 via Python](https://youtu.be/d7MgydfTaek)
+> 📚 with [Python copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBRoz08wgngT79u7COqhy0LAe0imjLAzR8WuiAwb8XtblE?e=PBNn6F)
 
 > 🎥 [Tool 2 via Docker](https://youtu.be/tjNrIUR2QF8)  
 > 📚 with [Docker copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBxFV_-40aQSa3BvgeqDihWAcOWei324maMH5V0NXN9Vuo?e=OBppjT)
 
 > 🎥 [Tool 2 via Ubuntu](https://youtu.be/KU_dhKy14QQ)  
-> 📚 with
+> 📚 with [Ubuntu 20.04 copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBXJKOy6xZtR51jDiccrUPGASaOnZaDEbmwjHwNuPPSW9k?e=rWurS4)
 
 ---
 
