@@ -205,7 +205,7 @@ def cmd_simulate_fl(args):
         status = (
             f"POISONING DETECTED — rejected: {san.rejected_hosts}"
             if san and san.poisoning_detected
-            else "clean"
+            else "Poisoning not detected"
         )
 
         print(
