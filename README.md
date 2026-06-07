@@ -33,7 +33,7 @@ IN PROGRESS - UPDATE video and REMOVE when completed
 > 🎥 [Tool 2 via Docker](https://youtu.be/tjNrIUR2QF8)  
 > 📚 with [Docker copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBxFV_-40aQSa3BvgeqDihWAcOWei324maMH5V0NXN9Vuo?e=OBppjT)
 
-> 🎥 [Tool 2 via Ubuntu](https://youtu.be/KU_dhKy14QQ)  
+> 🎥 [Tool 2 via Ubuntu](https://youtu.be/Fulgya3ur50)  
 > 📚 with [Ubuntu 20.04 copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBXJKOy6xZtR51jDiccrUPGASaOnZaDEbmwjHwNuPPSW9k?e=rWurS4)
 
 ---
