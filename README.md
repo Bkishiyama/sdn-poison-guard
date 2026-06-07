@@ -21,8 +21,6 @@ The main contribution of this project is to use the Byzantine statistical filter
 
 ## Video Presentation
 
-IN PROGRESS - UPDATE and REMOVE when completed
-
 Watch my videos:
 
 IN PROGRESS - UPDATE video and REMOVE when completed
@@ -157,7 +155,6 @@ It involves the process of selecting, extracting, or constructing features that 
 This is essential for improving model performance. 
 In this system, each raw flow is represented using eight numeric features.
 
-IN PROGRESS - UPDATE and REMOVE when completed
 
 | Feature | Description |
 |---|---|
@@ -181,7 +178,7 @@ The client's raw data is not shared with the central model - only the computed s
 ### Technology Choices
 
 | Component | Choice | Justification | Tool |
-|---|---|---|
+|---|---|---|---|
 | Language | Python 3.8+ | For analysis and ML | Tool 1 |
 | ML | scikit-learn IsolationForest | Lightweight | Tool 1 |
 | Data | pandas, numpy | Fast flow log processing | Tool 1 |
@@ -241,7 +238,8 @@ In this case, the dataset should be formatted as a CSV with the following column
 
 The model works as expected. When client 6 launches its attack, it gets rejected. The global model excludes its metrics.
 
-| **Metric** | **Naive FedAvg (no defense)** | **Sanitized FedAvg (Tool 2)** |
+| Metric | Naive FedAvg (no defense) | Sanitized FedAvg (Tool 2) |
+|---|---|---|
 | Global threshold | 10.2296 (corrupted) | 0.5657 (correct) |
 |client6 included | Yes | No -> rejected at Z=2.24 |
 | Poisoning detected | No | Yes -> security alert |
