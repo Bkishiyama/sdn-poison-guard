@@ -131,17 +131,22 @@ Tool 2's is added to the architecture.
 
 ---
 
-#### Tool 1 Development
+#### Tool 2 Development
 
-| Module | File | Responsibility |
-|---|---|---|
-| Feature Extractor | `src/features.py` | Normalize numeric fields, encode protocol/ports, compute derived features |
-| Local Trainer | `src/local_train.py` | Train Isolation Forest per client; save model bundle |
-| Federated Aggregator | `src/federated.py` | Load client models; average anomaly scores; consensus threshold |
-| Detection Engine | `src/detect.py` | Score new flows; annotate with `anomaly_score`, `is_anomaly`, `anomaly_rank` |
-| Evaluator | `src/evaluate.py` | Compute accuracy/precision/recall/F1/AUC; confusion matrix plots |
-| CLI | `src/cli.py` | Argparse-based interface wiring all modules |
+| Module | File | Responsibility | Tool |
+|---|---|---|---|
+| Feature Extractor | `src/features.py` | Normalize numeric fields, encode protocol/ports, compute derived features | Tool 1 |
+| Local Trainer | `src/local_train.py` | Train Isolation Forest per client; save model bundle | Tool 1 |
+| Federated Aggregator | `src/federated.py` | Load client models; average anomaly scores; consensus threshold; calls sanitizer before FedAvg; logs per-round auidt CSV | Tool 1 extended in Tool 2 |
+| Detection Engine | `src/detect.py` | Score new flows; annotate with `anomaly_score`, `is_anomaly`, `anomaly_rank` | Tool 1 |
+| Evaluator | `src/evaluate.py` | Compute accuracy/precision/recall/F1/AUC; confusion matrix plots | Tool 1 |
+| CLI | `src/cli.py` | Argparse-based interface wiring all modules | Tool 1 |
+| CLI root | `cli.py` | Extends Tool 1 CLI with `sanitize`, `demo`, and exteded `simulate-fl` commands | Tool 2 |
 | Data Generator | `scripts/generate_data.py` | Synthetic SDN flow CSV generator for quick-start testing |
+| Sanitizer | src/sanitizer.py | Z-score Byzantine-robust aggregation; detects and drops poisoned client uploads before FedAvg; generates per-host audit reports | Tool 2 |
+| Poisoned Host | sdn_mininet/poisoned_host.py | Simulates a compromised Mininet host uploading malicious model metrics to the Ryu controller; standalone demo mode | Tool 2 |
+| Ryu Controller | sdn_mininet/ryu_collector.py | L2 learning switch; flow stats collector; adds REST endpoints for FL uploads and sanitized aggregation | Tool 1 extended in Tool 2 |
+| Test Suite | tests/test_sanitizer.py | 29 unit test assertions verifying sanitizer under healthy, poisoned, and edge case scenarios | Tool 2 |
 
 ---
 
