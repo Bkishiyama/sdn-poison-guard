@@ -177,21 +177,24 @@ This is where each client uses its own model and scaler to assign an anomaly sco
 All clients send these scores to the central model, in which they are averaged to produce a final global anomaly score. 
 The client's raw data is not shared with the central model - only the computed scores. 
 
-IN PROGRESS - UPDATE and REMOVE when completed
 
 ### Technology Choices
 
-| Component | Choice | Justification |
+| Component | Choice | Justification | Tool |
 |---|---|---|
-| Language | Python 3.8+ | For analysis and ML |
-| ML | scikit-learn IsolationForest | Lightweight |
-| Data | pandas, numpy | Fast flow log processing |
-| Serialization | joblib | Fast sklearn model pickling |
-| CLI | argparse | No extra dependencies & easy to extend |
-| Config | PyYAML | Easy to read FL simulation config |
-| Graphs | matplotlib, seaborn | Standard evaluation |
-
-IN PROGRESS - UPDATE and REMOVE when completed
+| Language | Python 3.8+ | For analysis and ML | Tool 1 |
+| ML | scikit-learn IsolationForest | Lightweight | Tool 1 |
+| Data | pandas, numpy | Fast flow log processing | Tool 1 |
+| Serialization | joblib | Fast sklearn model pickling | Tool 1 |
+| CLI | argparse | No extra dependencies & easy to extend | Tool 1 |
+| Config | PyYAML | Easy to read FL simulation config | Tool 1 |
+| Graphs | matplotlib, seaborn | Standard evaluation | Tool 1 |
+| Sanitizer | Python stdlib | Z-score filter uses only built-in `math` | Tool 2 |
+| SDN Controller | Ryu + OpenFlow 1.3 | Adds REST endpoints to Tool 1 for FL uploads and sanitized aggregation | Tool 2 |
+| REST API | Ryu WSGIApplication + WebOb | Included in Ryu; exposes `/fl/upload`, `/fl/aggregate`, `/fl/status`, `/fl/reset` | Tool 2 |
+| Virtual Network | Mininet | Extends Tool 1 topology; `poisoned_host.py` runs as a Mininet host script to simulate adversary | Tool 2 |
+| Testing | pytest | test runner; 29 assertions verify sanitizer math independently of Ryu and Mininet | Tool 2 |
+| Containerization | Docker | To reproduce Tool 1 and 2's pipeline on any OS | Tool 1 & 2 |
 
 ---
 
@@ -205,7 +208,6 @@ This produces realistic benign and attack traffic without a download.
 It can also be evaluated using public datasets such as UNSW-NB15 or CICDDoS2019.
 In this case, the dataset should be formatted as a CSV with the following columns: `src_ip, dst_ip, src_port, dst_port, protocol, bytes, packets, duration, flags, label`.
 
-IN PROGRESS - UPDATE and REMOVE when completed
 
 #### Synthetic Attack Types
 
@@ -215,50 +217,40 @@ IN PROGRESS - UPDATE and REMOVE when completed
 | Port Scan | Tiny packets, many unique dst_ports, SYN flags | Heavy in Client 3 |
 | Flow Table Exhaustion | Random src IPs, all ports, tiny packets | Heavy in Client 3 |
 
-IN PROGRESS - UPDATE and REMOVE when completed
 
 #### Experimental Setup
 
-- **3 clients**, each with about 1,920 training flows (benign-heavy, 16% attack)
-- **1,440-flow combined labeled test set** (held out, not seen during training)
-- Labels used **only for evaluation**, not training (true unsupervised setup)
-- Threshold: federated consensus (mean of each client's 5th-percentile score)
+- **6 clients**, each with about 1,920 training flows (benign-heavy, 16% attack)
+- **3 FL rounds** per simulation run
+- **1 poisoned client** (h6) uploads a metric and multiplies it by 100 to simulate an insider attack
+- **Z-score threshold: 2.0** for a client with Z-score above this gets rejected before FedAvg
+- Labels used **only for evaluation**, not training for a true unsupervised setup
+  - The model never sees the labels during training. Labels (e.g., normal, attack, anomaly, benign) are used only after training to check how well the model performed.
+- Threshold or Sanitizer metric: federated consensus, or absolute value of each client's 5th-percentile anomaly score
 
-IN PROGRESS - UPDATE and REMOVE when completed
+#### Test Scenarios
+| Scenario | Description | Expected Result |
+| Control group | All 6 clients upload honest metrics | All accepted, no alert |
+| Poisoning attack (no defense) | client6 uploads metric × 100, naive FedAvg | Global model corrupted | 
+| Poisoning attack (with defense) | client6 uploads metric × 100, sanitizer enabled | h6 rejected, clean global model produced |
+| Z-threshold sensitivity | Run with z_threshold=1.5 vs 2.0 | Tighter threshold catches subtler attacks |
 
 ### Results
 
 #### Synthetic Pipeline Results
 
-```
-        label  accuracy  precision  recall     f1   roc_auc
-    Federated    0.8535     0.9565  0.0948 0.1725    0.7655
-Local:client1    0.8632     0.8571  0.1810 0.2989    0.8496
-Local:client2    0.8722     0.6690  0.4095 0.5080    0.7606
-Local:client3    0.8771     0.9231  0.2586 0.4040    0.8291
-```
-IN PROGRESS - UPDATE and REMOVE when completed
+The model works as expected. When client 6 launches its attack, it gets rejected. The global model excludes its metrics.
+
+| **Metric** | **Naive FedAvg (no defense)** | **Sanitized FedAvg (Tool 2)** |
+| Global threshold | 10.2296 (corrupted) | 0.5657 (correct) |
+|client6 included | Yes | No -> rejected at Z=2.24 |
+| Poisoning detected | No | Yes -> security alert |
+| Damage mitigated | — | 9.6639 units |
 
 **Key findings:**
-- The federated model achieves **very high precision (0.96)** or with low false positives.
-- **ROC-AUC of 0.77** shows meaningful separation between attack and benign traffic in score space.
-- Local models trained on one client's data perform poorly on other clients' data - demonstrating the value of federated aggregation.
-
-IN PROGRESS - UPDATE and REMOVE when completed
-
-#### Live Mininet + Ryu Results
-
-```
-        label  accuracy  precision  recall     f1
-    Federated    1.0000     1.0000  1.0000 1.0000
-Local:live_c1    0.0348     1.0000  0.0348 0.0673
-Local:live_c2    0.0498     1.0000  0.0498 0.0948
-Local:live_c3    0.0348     1.0000  0.0348 0.0673
-```
-
-The live results demonstrate the core value of the federated approach: local models trained on one switch's traffic perform poorly on another switch's data (3-5% recall), while the federated model combining all three achieves dramatically better detection.
-
-IN PROGRESS - UPDATE and REMOVE when completed
+- The sanitizer identified and rejected the poisoned client
+- 5 honest clients around Z=0.45; below the threshold
+- The poisoned client's Z-score of 2.24 exceeds the threshold of 2.0 and detected
 
 ### Known Issues and Limitations
 
@@ -270,8 +262,8 @@ IN PROGRESS - UPDATE and REMOVE when completed
 | Offline evaluation | Not real-time | Processes static CSV logs; not integrated with a live controller |
 | Manual labeling | Attack window labeled by timestamp | Requires noting attack start time and running label_window.py |
 | Python 3.8 required | Ubuntu 20.04 ships with Python 3.8 | All files use `from __future__ import annotations` for compatibility |
-
-IN PROGRESS - UPDATE and REMOVE when completed
+| Use 6 clients | Does not test well with 3 clients | Adjust parameters with lesser clients |
+| Global FL updates do not apply to clients | Global Model does not improve | N/A but will program later | 
 
 ---
 
