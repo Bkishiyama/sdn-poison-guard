@@ -142,7 +142,7 @@ Tool 2's is added to the architecture.
 | Evaluator | `src/evaluate.py` | Compute accuracy/precision/recall/F1/AUC; confusion matrix plots | Tool 1 |
 | CLI | `src/cli.py` | Argparse-based interface wiring all modules | Tool 1 |
 | CLI root | `cli.py` | Extends Tool 1 CLI with `sanitize`, `demo`, and exteded `simulate-fl` commands | Tool 2 |
-| Data Generator | `scripts/generate_data.py` | Synthetic SDN flow CSV generator for quick-start testing |
+| Data Generator | `scripts/generate_data.py` | Synthetic SDN flow CSV generator for quick-start testing | Tool 1 |
 | Sanitizer | src/sanitizer.py | Z-score Byzantine-robust aggregation; detects and drops poisoned client uploads before FedAvg; generates per-host audit reports | Tool 2 |
 | Poisoned Host | sdn_mininet/poisoned_host.py | Simulates a compromised Mininet host uploading malicious model metrics to the Ryu controller; standalone demo mode | Tool 2 |
 | Ryu Controller | sdn_mininet/ryu_collector.py | L2 learning switch; flow stats collector; adds REST endpoints for FL uploads and sanitized aggregation | Tool 1 extended in Tool 2 |
