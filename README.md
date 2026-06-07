@@ -131,91 +131,6 @@ Tool 2's is added to the architecture.
 
 ---
 
-#### topology.py
-
-This is the file that builds Mininet virtual network.
-Inside this file, the build() method:
-- creates hosts and switches
-- links the hosts ↔ switches
-- links switches ↔ switches
-- assigns IPs
-- sets the link parameters
-- prepares the network for traffic generation
-  - start_benign_traffic(): Starts normal background traffic for training.
-  - start_attack_traffic(): Starts malicious traffic for labeling and testing.
-  - label_attack_flows(): Runs your labeling script to mark attack flows.
-  - run(): Starts Mininet, launches traffic, and labels data flow. 
-ryu_collector.py
-This file is for collecting flow stats, and where I added REST endpoints to upload metrics - for Tool 2. The program has a SDNSanitizerController class , a data traffic manager, does:
-- Negotiates traffice when a switch connects, Ryu asks: “What OpenFlow features do you support?”
-- Deals with packets that the switch sends to the controller, e.g. an unknown MAC, ARP request, or packets that miss the flow table.
-- Receive flow statistics reports from switches, e.g., number of bytes, packets, and match fields.
-- Polls switches for updated stats.
-
-In summary, I extended this file. I first built ryu_collector.py for Tool 1 (SDN Flow Log Collection). I expanded it to act as the REST API interface for Tool 2, my federated learning system. I added endpoints that:
-- Uploads new metrics from each client to the federated model as hosts push flow feature summaries or anomaly scores
-- Send client side model updates to the central server, i.e., Isolation Forest parameters.
-- Starts the federated aggregation in which the server combines all client models into the Global IDS.
-- Reports client status back to the controller, e.g., “model uploaded,” “aggregation complete,” “ready for next round.”
-
-#### local_train.py
-
-This program is used for Isolation Forest to train on incoming packet flow features.
-1. Loads the local client’s flow feature CSV
-2. Trains an Isolation Forest model on those features
-3. Saves the trained model so it can be sent to the central controller. 
-
-#### federated.py
-
-This program is the used for the server FL system. It takes the Isolation Forest models trained by each client and combine them into a single Global IDS model. The file:
-1. Loads client models: load_client_models() reads each client’s uploaded model bundle and prepares them for aggregation
-2. Combines client anomaly scores: federated_score_ensemble() merges client predictions into a unified anomaly score for each flow
-3. Determins a shared anomaly threshold: federated_threshold_consensus() computes a global threshold based on client side thresholds
-4. Aggregates and saves the global model: aggregate_and_save() performs the FedAvg style aggregation and writes out the Global IDS model
-5. Runs simulated FL rounds: simulate_fl_rounds() allows you test multiple rounds of federated training without running Mininet
-
-#### sanitize.py 
-
-This program acts as a filter that protects the FL process from malicious client updates. It evaluates each client’s update and decides whether it should be accepted, rejected, or flagged before it is injected to federated.py for aggregation. 
-1. Computes stats on client updates: The mean, standard deviations, and Z scores are calculated when a client sends its vector
-2. Determines poisoned updates: If the poisoning_detected function calculates that the client’s update is not within a normal range, based on a Z-score threshold, it is marked as suspicous.
-3. Accepts or rejects a client update: sanitize_vector_updates stores a list, in HostReport.reason, of accepted and rejected hosts, due to “too large,” “outlier,” or “failed threshold.”
-4. Stores a sanitation report that summarizes:
-   - how many clients submitted
-   - how many were accepted
-   - how many were rejected
-   - which hosts were problematic
-   - the Z threshold used
-
-#### detect.py
-This program takes the Global IDS model, made by federated aggregation, and applies it to new and incoming packet flows. It has two main functions:
-1. detects() function loads the global Isolation Forest model, reads a batch of flow feature rows, and computes:
-   - anomaly scores
-   - binary anomaly labels
-   - ranked anomaly severity
-   - It then writes the detection results to evaluation.py.
-2. detect_local() function runs detection runs detection using a local model instead of the global one. This is used for debugging or comparing local vs. federated performance.
-
-#### evaluate.py 
-
-This program determines the effectiveness of my setup. It takes the outputs from detection.py and computes the standard evaluation metrics. This allows the visualization of results. It does:
-1. Computes metrics: The compute_metrics() functions calculates accuracy, precision, recall, F1 score, and confusion matrix values.
-2. Compares different setups: To ensure the results are worthwhile, different values are compared. For example, I compare local vs. federated and sanitized vs. unsanitized after calculating the results for each.
-3. Plots the confusion matrix to show true positives, false positives, true negatives, and false negatives.
-4. Creates bar charts to compare metrics across multiple setups or models.
-5. Formats and prints an evaluation summary for console output and for later review.
-
-#### Summary
-
-In summary, the Tool 2 pipeline:
-1. Mininet + Ryu collect flow stats
-2. features.py extracts numerical features
-3. local_train.py trains local Isolation Forests
-4. federated.py aggregates them into a Global IDS
-5. detect.py applies that global model to new flows
-6. evaluate.py determines the effectiveness of the system.
-
-
 #### Tool 1 Development
 
 | Module | File | Responsibility |
@@ -717,17 +632,37 @@ The Federated Learning architecture splits the workload between individual local
   - src/local_train.py (The Client Side/trainer) 
     - This is the third program in my pipeline. It is used to train the AI model. This program takes the "cleaned-up" network clues and uses them to train an AI security model. The model is the Isolation Forest. In Federated Learning, it is directly installed on each individual user's computer. Instead of spending a lot of time studying what normal or safe traffic looks like, an Isolation Forest works like a detective. It hunts for unusual events. It isolates the rare and unusual "outlier" data and signals it as a cyber attack.
     - Once the local training is finished, the program saves everything together into a neat package, called a bundle. This is merely a newly trained AI model, a data scaler that keeps all the numbers evenly balanced, and a set of local scoring stats used to judge how unusual future traffic might be. This local training process is important for cybersecurity because it protects user privacy. By teaching the AI model directly on the local machine, sensitive network logs never have to be sent over the internet or shared with an outside server.
+    - In summary, this program is used for Isolation Forest to train on incoming packet flow features.
+      1. Loads the local client’s flow feature CSV
+      2. Trains an Isolation Forest model on those features
+      3. Saves the trained model so it can be sent to the central controller.
   -	src/federated.py (The Coordinator/Server Side) 
     - This fourth program in the pipeline acts as a central coordinator that brings together all of the individual AI security models trained in the previous step. It simulates a wholistic environment where multiple computers, or the clients, work together over several rounds to build a master AI security model. The server does not see the private network logs of the clients. To create this unified defense, the program takes the local AI models from all the clients and combines their intelligence using one of two strategies: 
       - **Score Ensemble** acts like a panel of experts averaging out their scores to see how unusual a piece of traffic looks, or
       - **Threshold Consensus** acts like a democratic vote where the majority must agree before officially declaring the data as a cyber attack.
   - This process is the core of Federated Learning. It creates a massive, network wide protection shield; every participant benefits from the collective knowledge of the entire group. They will be able to spot advanced threats like DDoS attacks together while keeping their own local data and completely private and secure.
+  - In summary, this program is the used for the server FL system. It takes the Isolation Forest models trained by each client and combine them into a single Global IDS model. The file:
+    1. Loads client models: load_client_models() reads each client’s uploaded model bundle and prepares them for aggregation
+    2. Combines client anomaly scores: federated_score_ensemble() merges client predictions into a unified anomaly score for each flow
+    3. Determins a shared anomaly threshold: federated_threshold_consensus() computes a global threshold based on client side thresholds
+    4. Aggregates and saves the global model: aggregate_and_save() performs the FedAvg style aggregation and writes out the Global IDS model
+    5. Runs simulated FL rounds: simulate_fl_rounds() allows you test multiple rounds of federated training without running Mininet
 ---
   3. The Zero-Trust Security Guard
   
   This is Tool 2 that I am adding to Tool 1.  
   - src/sanitizer.py
-    -  This program (Step 4.5) is next in the pipeline. Before the coordinator runs the Score Ensemble or Threshold Consensus, it inspects the client data that it receives. When it receives data from a client, the data is compared against the groups data by using a Z-score. The Z-score measures client values against the group's values and determines if there are any deviations. If there are deviations, the data is dropped and data gets logged as a security violation. This way, the data is not injected into the FL model. The FL model is forumulated without corrupted data and thus remains reliable. 
+    -  This program (Step 4.5) is next in the pipeline. Before the coordinator runs the Score Ensemble or Threshold Consensus, it inspects the client data that it receives. When it receives data from a client, the data is compared against the groups data by using a Z-score. The Z-score measures client values against the group's values and determines if there are any deviations. If there are deviations, the data is dropped and data gets logged as a security violation. This way, the data is not injected into the FL model. The FL model is forumulated without corrupted data and thus remains reliable.
+    -  This program acts as a filter that protects the FL process from malicious client updates. It evaluates each client’s update and decides whether it should be accepted, rejected, or flagged before it is injected to federated.py for aggregation. 
+      1. Computes stats on client updates: The mean, standard deviations, and Z scores are calculated when a client sends its vector
+      2. Determines poisoned updates: If the poisoning_detected function calculates that the client’s update is not within a normal range, based on a Z-score threshold, it is marked as suspicous.
+      3. Accepts or rejects a client update: sanitize_vector_updates stores a list, in HostReport.reason, of accepted and rejected hosts, due to “too large,” “outlier,” or “failed threshold.”
+      4. Stores a sanitation report that summarizes:
+         - how many clients submitted
+         - how many were accepted
+         - how many were rejected
+         - which hosts were problematic
+         - the Z threshold used
 ---
 4. Detection & Evaluation
 
@@ -738,7 +673,14 @@ Once the global federated model is built, it needs to be put to work and its per
       - an anomaly score to measure exactly how suspicious the traffic behaves,
       - an is_anomaly trigger which acts as a yes-or-no alarm button, and
       - an anomaly rank to grade the threat's severity level from low to critical.
-    - Overall, this is where the AI stops practicing on fake data and starts to diagnose whether new live traffic is benign or a malignant cyber attack.
+    - This is where the AI stops practicing on fake data and starts to diagnose whether new live traffic is benign or a malignant cyber attack.
+    - This program takes the Global IDS model, made by federated aggregation, and applies it to new and incoming packet flows. It has two main functions:
+      1. detects() function loads the global Isolation Forest model, reads a batch of flow feature rows, and computes:
+         - anomaly scores
+         - binary anomaly labels
+         - ranked anomaly severity
+         - It then writes the detection results to evaluation.py.
+      2. detect_local() function runs detection runs detection using a local model instead of the global one. This is used for debugging or comparing local vs. federated performance.
   - src/evaluate.py 
     -	This sixth program acts as the final report card for the AI pipeline as a whole. It tests the master defense AI model to see how well it performs in the real world. To do this, it calculates standard data science metrics that grade the system's intelligence from different angles: 
       - Accuracy - overall correctness
@@ -750,6 +692,12 @@ Once the global federated model is built, it needs to be put to work and its per
       - Confusion matrices -  grid charts that show what the AI got right versus what it misdiagnosed
       - Performance bar charts. 
     - In essense, this evaluation shows whether the AI is actually effective. A high precision score means the AI won't annoy network administrators with false alarms, while a high recall score shows that the system won't completely miss a malignant attacks.
+    - In summary, this program determines the effectiveness of my setup. It takes the outputs from detection.py and computes the standard evaluation metrics. This allows the visualization of results. It does:
+      1. Computes metrics: The compute_metrics() functions calculates accuracy, precision, recall, F1 score, and confusion matrix values.
+      2. Compares different setups: To ensure the results are worthwhile, different values are compared. For example, I compare local vs. federated and sanitized vs. unsanitized after calculating the results for each.
+      3. Plots the confusion matrix to show true positives, false positives, true negatives, and false negatives.
+      4. Creates bar charts to compare metrics across multiple setups or models.
+      5. Formats and prints an evaluation summary for console output and for later review.
   - tests/test_sanitizer.py
     - This script is for automated verification. Before using the sanitizer in the Ryu controller, we want to test it. Verification should be completed for every condition that is used. ChatGPT provided 29 assertions that should be tested in four different scenarios:
       - A healthy network where all six hosts are honest. This should show no rejections.
@@ -763,11 +711,31 @@ Once the global federated model is built, it needs to be put to work and its per
 The core pipeline can run on synthetic data. The sdn_mininet/ module is used to bridge the gap between simulation and a real SDN environment by using Mininet and a Ryu controller.
   - sdn_mininet/topology.py 
     - This program builds a virtual, emulated network from scratch, by using Mininet, a network emulator. It constructs a realistic SDN topology with a controller, switches, and hosts. It then links these components together so they can communicate with each other. Additionally, this program contains built-in traffic generators that simulate both normal user behavior and network attacks, such as DDoS floods or port scans. This appears as a functional simulated internet with a pipeline that generates OpenFlow traffic without using any physical hardware.
-  - sdn_mininet/poisoned_host.py
+    - Inside this file, the build() method:
+      - creates hosts and switches
+      - links the hosts ↔ switches
+      - links switches ↔ switches
+      - assigns IPs
+      - sets the link parameters
+      - prepares the network for traffic generation
+        - start_benign_traffic(): Starts normal background traffic for training.
+        - start_attack_traffic(): Starts malicious traffic for labeling and testing.
+        - label_attack_flows(): Runs your labeling script to mark attack flows.
+        - run(): Starts Mininet, launches traffic, and labels data flow. 
+        - sdn_mininet/poisoned_host.py
     - This program is an addition to Tool 1. It is added such that Tool 2 provides an attack. Host 6 runs this attack as an inside attacker. Instead of loading legitimate parameters from its locally trained model, H6 sends corrupted data, or metrics, to the Ryu controller. The simulted attack will need to be sanitized in order to defend against the attack. While this script is produces an attack, the defense is set up in src/sanitizer.py and sdn_mininet/ryu_collector.py. After the Ryu controller, or ryu_collector.py, receives the data from the hosts, the data is passed to sanitizer.py where the metrics are inspected. If it is poisoned, the metrics are dropped and not added to the FL global model. The sanitized data is then sent to federated.py where it aggregates only verified clean uploads from the honest hosts. 
   - sdn_mininet/ryu_collector.py 
     - This program runs as an application on top of the Ryu SDN controller, or the "brain" that manages the virtual network's switches. Its job is to act as a data recorder. As traffic flows across the Mininet topology, the Ryu controller continuously receives raw statistics from every switch in the network via the OpenFlow protocol. This program receives those statistics, organizes them into structured rows, and writes them to a CSV file. In short, it is the pipeline's real-time sensor, converting switch data into network flow logs. This is similar to my first phase where I had scripts/generate_data.py make data synthetically.
-    - For Tool 2, I extend the functionality of Tool 1 by adding REST API endpoints. This allows the hosts, in Mininet, to send their local data to the controller. In turn, this allows the sanitizer to receive and process data. The first endpoint, POST /fl/upload, is used for clients to upload their local model metrics. The second endopoint, GET /fl/status, allows users to check the current state of the FL model and get information from it. This program also calls the sanitizer before calculating Federated Averaging (FedAvg). This ensures that the updates are filtered by using statistical analysis. Any suspicious updates from the clients are found in the ryu_sanitizer.log. This part of the novelty such that it does not blindly accept all updates. It filters out suspicious updates before updating the global model.    
+    - For Tool 2, I extend the functionality of Tool 1 by adding REST API endpoints. This allows the hosts, in Mininet, to send their local data to the controller. In turn, this allows the sanitizer to receive and process data. The first endpoint, POST /fl/upload, is used for clients to upload their local model metrics. The second endopoint, GET /fl/status, allows users to check the current state of the FL model and get information from it. This program also calls the sanitizer before calculating Federated Averaging (FedAvg). This ensures that the updates are filtered by using statistical analysis. Any suspicious updates from the clients are found in the ryu_sanitizer.log. This part of the novelty such that it does not blindly accept all updates. It filters out suspicious updates before updating the global model.
+      - Negotiates traffic when a switch connects, Ryu asks: “What OpenFlow features do you support?”
+      - Deals with packets that the switch sends to the controller, e.g. an unknown MAC, ARP request, or packets that miss the flow table.
+      - Receive flow statistics reports from switches, e.g., number of bytes, packets, and match fields.
+      - Polls switches for updated stats.
+    - In summary, I extended this file. I first built ryu_collector.py for Tool 1 (SDN Flow Log Collection). I expanded it to act as the REST API interface for Tool 2, my federated learning system. I added endpoints that:
+      - Uploads new metrics from each client to the federated model as hosts push flow feature summaries or anomaly scores
+      - Send client side model updates to the central server, i.e., Isolation Forest parameters.
+      - Starts the federated aggregation in which the server combines all client models into the Global IDS.
+      - Reports client status back to the controller, e.g., “model uploaded,” “aggregation complete,” “ready for next round.”
   - sdn_mininet/label_window.py 
     - After a Mininet experiment finishes running, this program acts as a post-processing annotator. Because the traffic generator in topology.py knows when an attack started and stopped, this program takes the raw CSV of collected flows. It then reviews it and stamps each time window with the correct label, as either "benign" or the specific attack type that was active during that period. This labeled dataset is what gets forwarded to src/features.py for feature extraction. This finishes the bridge between live SDN emulation and machine learning pipeline.
 ---
