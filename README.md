@@ -27,7 +27,7 @@ Watch my videos:
 
 IN PROGRESS - UPDATE video and REMOVE when completed
 
-> 🎥 [Tool 2 via Python](https://youtu.be/d7MgydfTaek)
+> 🎥 [Tool 2 via Python](https://youtu.be/d7MgydfTaek)  
 > 📚 with [Python copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBRoz08wgngT79u7COqhy0LAe0imjLAzR8WuiAwb8XtblE?e=PBNn6F)
 
 > 🎥 [Tool 2 via Docker](https://youtu.be/tjNrIUR2QF8)  
