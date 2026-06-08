@@ -4,12 +4,12 @@
 
 **Tool 2: Model Poisoning Sanitizer**
 
-Tool 2 was added to Tool 1, resulting in some Tool 1 remnants remaining in the files.
-Testing is limited to Tool 2, and Tool 1 will not be checked for functionality. 
+I added Tool 2 to Tool 1's program. There will be Tool 1 remnants within in the files.
+Testing is limited to Tool 2, as Tool 1 will not be checked for functionality. 
 My goal is to secure the machine learning (ML) pipeline in an Software Defined Network (SDN)/Federated Learning (FL) environment.
 
-Tool 1 detected threats in my Software Defined Network (SDN), created logs, and used the logs in my Federated Learaning (FL) model.
-Tool 2 defends the network against attackers who try to influence the FL model. 
+With Tool 1, I detected threats in my Software Defined Network (SDN), created logs, and used the logs in my Federated Learaning (FL) model.
+I make Tool 2 to defend my network against attackers who try to influence the FL model. 
 This project utilizes a Byzantine statistical filter in the Ryu SDN controller to defend the FL model from being poisoned.
 Basically, it applies a Z-score anomaly detection uploads from the clients and determines if the data is corrupted.
 
@@ -22,8 +22,6 @@ The main contribution of this project is to use the Byzantine statistical filter
 ## Video Presentation
 
 Watch my videos:
-
-IN PROGRESS - UPDATE video and REMOVE when completed
 
 > 🎥 [Tool 2 via Python](https://youtu.be/d7MgydfTaek)  
 > 📚 with [Python copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBRoz08wgngT79u7COqhy0LAe0imjLAzR8WuiAwb8XtblE?e=PBNn6F)
