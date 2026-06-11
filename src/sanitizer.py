@@ -1,10 +1,10 @@
 from __future__ import annotations
 #!/usr/bin/env python3
-# import annots required for Python versions < 3.10. It makes annotations act as strings
+
 """  src/sanitizer.py
 Purpose: This program checks client's updates for model poisoning attacks.
-If detected, the offending client is dropped from the aggregation.
-If not detected, aggregate the client's updates into the global model.
+If detected, the attacker client is dropped from the aggregation.
+If no detection, aggregate the client's updates into the global model.
 """
 
 import math
@@ -156,8 +156,8 @@ def aggregate_with_sanitizer(
         return mean, report
 
     ''' Z-score filtering loop
-    Analyze each host's update against the group mean and standard deviation.
-    If the Z-score is above the threshold, the host is rejected and not included in the aggregated model.
+    Analyze each host's update against the group mean and standard deviation. If the Z-score 
+    is above the threshold, the host is rejected and not included in the aggregated model.
     Otherwise, the host is accepted and included in the FL aggregated model.
     '''
     # To store the accepted hosts, clean values, and rejected hosts
@@ -231,8 +231,8 @@ def aggregate_with_sanitizer(
 '''
 This function is an extended version of the Z-score filtering loop. Each clients sends
 a list of numbers as a vector or parameter array, and not a single number. This will
-remove malicious clients before building a global model. Basically, this deals with
-clients that upload all of the Isolation Forest parameters and not a single metric.
+remove malicious clients before building a global model. This deals with clients 
+that upload all of the Isolation Forest parameters instead of a single metric.
 Returns average parameter vector and sanitation report.
 '''
 def sanitize_vector_updates(
