@@ -1,13 +1,12 @@
 from __future__ import annotations
 #!/usr/bin/env python3
 
-""" features.py
-SDN Flow Log Feature Extraction
-This file is responsible for loading raw SDN flow data from CSV files 
-and turning it into clean numeric features for our models to use.
+""" features.py - SDN Flow Log Feature Extraction
+This file loads raw SDN flow data from CSV files and then converts it 
+into numeric features so that the models may use numbers.
 - Loads and cleans the data
-- Encodes categorical fields (like protocol)
-- Creates derived features (bytes per packet, packet rate)
+- Encodes categorical fields, such as protocol
+- Creates derived features, e.g., bytes per packet, packet rate
 - Normalizes numeric values using StandardScaler
 """
 
@@ -33,8 +32,7 @@ PROTOCOL_MAP = {
 }
 
 
-# Load raw flow data from CSV
-# Load a CSV file containing SDN flow logs
+# Load a CSV file (raw flow data) containing SDN flow logs
 def load_flows(path: str) -> pd.DataFrame:
     # Read CSV flow data and clean up column names
     df = pd.read_csv(path, low_memory=False)
@@ -46,7 +44,7 @@ def load_flows(path: str) -> pd.DataFrame:
 
 
 # Main preprocessing function
-# Convert raw dataframe into numeric features ready for the model
+# Convert raw dataframe into numeric features so model may use
 def preprocess(df: pd.DataFrame, scaler: StandardScaler = None):
     # Main function that transforms raw flows into model-ready features
     df = df.copy()
@@ -92,7 +90,9 @@ def preprocess(df: pd.DataFrame, scaler: StandardScaler = None):
         else:
             num_df[f"{port_col}_bin"] = 2  # default to dynamic ports
 
-    # Scalin
+    # Scale numeric features using a StandardScaler
+    # During training, fit a new scaler and transform X.
+    # During detection/evaluation, reuse the existing scaler for consistent feature scaling.
     feature_names = list(num_df.columns)
     X = num_df.values.astype(np.float32)
 
@@ -101,14 +101,14 @@ def preprocess(df: pd.DataFrame, scaler: StandardScaler = None):
         scaler = StandardScaler()
         X = scaler.fit_transform(X)
     else:
-        # Use existing scaler (detection / evaluation time)
+        # Use existing scaler (detection/evaluation time)
         X = scaler.transform(X)
 
     return X, scaler, feature_names
 
 
-# Extract ground truth labels (for evaluation only)
-# Get true labels if they exist in the dataset (used only for evaluation)
+# Extract ground truth labels - for evaluation only
+# Get true labels if they exist in the dataset - for evaluation only
 def get_labels(df: pd.DataFrame) -> np.ndarray | None:
     # Return ground-truth labels if the 'label' column exists
     if LABEL_COL not in df.columns:
