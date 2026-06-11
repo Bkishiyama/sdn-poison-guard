@@ -249,19 +249,6 @@ The model works as expected. When client 6 launches its attack, it gets rejected
 - 5 honest clients around Z=0.45; below the threshold
 - The poisoned client's Z-score of 2.24 exceeds the threshold of 2.0 and detected
 
-### Known Issues and Limitations
-
-| Limitation | Impact | Notes |
-|---|---|---|
-| L2 flow collection | MAC addresses instead of IPs in live mode | Ryu learning switch installs L2 flows; IP fields absent from match |
-| Simple FedAvg | No formal privacy guarantee | No secure aggregation or differential privacy |
-| Classical ML only | Less expressive than deep models | Isolation Forest is fast and interpretable |
-| Offline evaluation | Not real-time | Processes static CSV logs; not integrated with a live controller |
-| Manual labeling | Attack window labeled by timestamp | Requires noting attack start time and running label_window.py |
-| Python 3.8 required | Ubuntu 20.04 ships with Python 3.8 | All files use `from __future__ import annotations` for compatibility |
-| Use 6 clients | Does not test well with 3 clients | Adjust parameters with lesser clients |
-| Global FL updates do not apply to clients | Global Model does not improve | N/A but will program later | 
-
 ---
 
 ## Quick Start
@@ -777,16 +764,15 @@ These three folders are not committed to the repository and are created automati
 
 ## Known Issues
 
-IN PROGRESS - UPDATE and REMOVE when completed
-
 | Limitation | Notes |
 |---|---|
 | L2 flows only in live mode | Ryu learning switch installs MAC-based flows; no IP match fields |
 | No secure aggregation | No differential privacy or encrypted model exchange |
-| Classical ML only | Isolation Forest; no deep autoencoder |
+| Classical ML only | Isolation Forest is simple; no deep autoencoder |
 | Offline evaluation | Static CSV logs; not integrated with a live SDN controller |
 | Manual attack labeling | Must note timestamp and run label_window.py after the run |
 | Python 3.8 compatibility | All files use `from __future__ import annotations` for type hint support |
-| FL updates | Local models do not improve | Global model does not update local hosts after aggregation |
-| Test rejection | Needs more client data | Lower Z threshold to 1.0 in fed_config.yaml |
+| FL updates | Local models do not improve - Global model does not update local hosts after aggregation |
+| Test rejection | Needs more client data increase from 3 to 6 or lower threshold to 1.0 in fed_config.yaml |
 
+---
