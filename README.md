@@ -225,6 +225,7 @@ In this case, the dataset should be formatted as a CSV with the following column
 
 #### Test Scenarios
 | Scenario | Description | Expected Result |
+|---|---|---|
 | Control group | All 6 clients upload honest metrics | All accepted, no alert |
 | Poisoning attack (no defense) | client6 uploads metric × 100, naive FedAvg | Global model corrupted | 
 | Poisoning attack (with defense) | client6 uploads metric × 100, sanitizer enabled | h6 rejected, clean global model produced |
