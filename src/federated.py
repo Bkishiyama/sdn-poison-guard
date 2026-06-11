@@ -2,7 +2,7 @@ from __future__ import annotations
 #!/usr/bin/env python3
 
 """ federated.py
-This file handles the Federated Learning setup for SDN anomaly detection.
+This file handles the FL setup for SDN anomaly detection. 
 Since we can't directly average Isolation Forest trees:
 1. Score Ensemble (default) -> average scores from all clients
 2. Threshold Consensus -> average the anomaly thresholds from each client
@@ -36,8 +36,7 @@ def load_client_models(pattern: str):
     return models, paths
 
 
-# Scoring strategies
-
+# Scoring strategies A and B
 # Strategy A: Average anomaly scores from all client models
 def federated_score_ensemble(
     client_models: list[dict],
@@ -71,8 +70,6 @@ def federated_threshold_consensus(client_models: list[dict]) -> float:
 
 
 # Aggregate and save global model
-
-
 # Combine client models into a single global bundle and save it
 def aggregate_and_save(
     client_models: list[dict],
@@ -177,7 +174,7 @@ def simulate_fl_rounds(
             for cid, bundle in client_bundles.items()
         }
 
-        # Tool 2: inject poisoned uploads if specified
+        # Tool 2: inject poisoned uploads upon command
         if poisoned_clients:
             for victim_id, multiplier in poisoned_clients.items():
                 if victim_id in client_metrics:
@@ -199,7 +196,7 @@ def simulate_fl_rounds(
             for line in san_report.summary_lines():
                 print(line)
         else:
-            # Tool 1 naive FedAvg — simple mean, no defense
+            # Tool 1 naive FedAvg -> simple mean, no defense
             global_threshold = sum(client_metrics.values()) / len(client_metrics)
             print(f"[FedAgg] Sanitizer DISABLED — naive FedAvg applied")
             print(f"[FedAgg] Global threshold: {global_threshold:.4f}")
@@ -239,7 +236,7 @@ def simulate_fl_rounds(
                     "poisoning_detected": san_report.poisoning_detected,
                 })
 
-    # Write sanitizer audit log
+    # Write a sanitizer audit log
     if log_rows:
         with open(log_path, "w", newline="") as csvfile:
             fieldnames = [
