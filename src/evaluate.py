@@ -1,12 +1,10 @@
 from __future__ import annotations
 #!/usr/bin/env python3
 
-""" evaluate.py
-Model Evaluation Script
-This file compares our anomaly detection predictions against 
-ground-truth labels (used only for testing; never during training).
-Calculate metrics like Accuracy, Precision, Recall, and F1.
-Generate confusion matrices and comparison chart.
+""" evaluate.py - Model Evaluation Script
+This file compares our anomaly detection predictions against ground-truth 
+labels (for testing only and not for training). Calculate metrics: Accuracy, 
+Precision, Recall, and F1. Generate confusion matrices and comparison chart.
 """
 
 import os
@@ -31,8 +29,7 @@ except ImportError:
     print("[Warning] matplotlib/seaborn not installed. Plots will be skipped.")
 
 
-# Compute metrics
-# Calculate accuracy, precision, recall, F1.
+# Compute metrics: accuracy, precision, recall, F1.
 def compute_metrics(
     y_true: np.ndarray,
     y_pred: np.ndarray,
@@ -57,7 +54,7 @@ def compute_metrics(
         "confusion_matrix": cm,
     }
 
-    # Calculate ROC-AUC if we have anomaly scores
+    # Calculate ROC-AUC
     if scores is not None:
         try:
             # Negate scores because lower is more anomalous in Isolation Forest
@@ -72,8 +69,7 @@ def compute_metrics(
     return result
 
 
-# Compare multiple models
-# Create a summary table of different models
+# Compare multiple models and create a summary table
 def compare_setups(results: list[dict]) -> pd.DataFrame:
     # Turn metric dictionaries into comparison table.
     rows = []
