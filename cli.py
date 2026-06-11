@@ -1,3 +1,4 @@
+from __future__ import annotations
 """ cli.py
 CLI for the SDN Federated Learning project.
 
@@ -26,8 +27,6 @@ Usage: python3 cli.py demo
 * simulate-fl -> Run multi-round federated learning simulation
 Usage: python3 cli.py simulate-fl
 """
-
-from __future__ import annotations
 
 import argparse
 import sys
