@@ -1,12 +1,10 @@
 from __future__ import annotations
 #!/usr/bin/env python3
 
-""" detect.py
-Anomaly Detection Engine
-I adjusted the parameters since my f1, precision, etc. came back as zero.
-Loads a trained model bundle and scores new SDN flow logs.
-Supports both the global federated model and single local client models.
-
+""" detect.py - The Anomaly Detection Engine
+I adjusted the parameters since my f1, precision, etc. came back as zero. 
+Loads a trained model bundle and scores new SDN flow logs. Supports the 
+global federated model as well as the single local client models. 
 Each scored flow gets three extra columns:
 - anomaly_score: float (lower = more anomalous)
 - is_anomaly: bool (True when score is below the threshold)
@@ -20,14 +18,13 @@ from .features import load_flows, preprocess
 from .federated import federated_score_ensemble
 
 """
-Score SDN flows using the global federated model.
+Score SDN data flows using the global federated model.
 Parameters:
 - model_path: path to the global model bundle (.pkl)
 - data_path: path to the CSV flow log to score
-- threshold: anomaly score cutoff. If None, uses the federated consensus 
-threshold stored in the bundle. If that threshold flags zero 
-flows, automatically falls back to the 5th percentile of the 
-actual scores so results are never all zero.
+- threshold: anomaly score cutoff. If None, uses the federated consensus threshold 
+stored in the bundle. If that threshold flags zero flows, automatically falls back 
+to the 5th percentile of the actual scores so results are never all zero.
 - top_n: if set, print the N most anomalous flows to stdout
 - verbose: print progress messages
 - Returns:
@@ -71,10 +68,10 @@ def detect(
         if verbose:
             print(f"[Detect] Using user override threshold: {threshold:.4f}")
 
-    # Fallback: if the threshold flags nothing, use the 5th percentile of
-    # actual scores. This handles cases where live traffic distributions
-    # differ from training data, which causes an overly conservative threshold. 
-    # Adjust threshold here since I had 0 results. This works so leave it <----------see ln 144
+    # Fallback: if the threshold flags nothing, use the 5th percentile of actual scores. 
+    # This handles cases where live traffic distributions differ from training data, 
+    # which causes a conservative threshold. 
+    # Adjust threshold here since I had 0 results. This works so leave it <----------see ln 139
     if (scores < threshold).sum() == 0:
         threshold = float(np.percentile(scores, 5))
         if verbose:
@@ -107,16 +104,15 @@ def detect(
 
 
 """
-Score flows using a single local client model.
-Used during evaluation to compare individual clients against the
-federated global model.
+Score flows using a single local client model. Used during evaluation to compare 
+individual clients against the federated global model.
 Parameters:
 - model_path: path to a local client model bundle (.pkl)
 - data_path: path to the CSV flow log to score
-- threshold: anomaly score cutoff. If None, uses the model's stored p5 
-score. Falls back to p5 of actual scores if nothing is flagged.
+- threshold: anomaly score cutoff. If None, uses the model's stored p5 score. Falls 
+back to p5 of actual scores if nothing is flagged.
 - verbose: print progress messages
-Returns:
+Return:
 - df : original DataFrame with anomaly_score, is_anomaly, anomaly_rank added
 """
 def detect_local(
@@ -136,7 +132,7 @@ def detect_local(
 
     t = threshold if threshold is not None else bundle["score_stats"]["p5"]
     
-    # Adjust threshold here since I had 0 results. This works so leave it <----------see ln 80
+    # Adjust threshold here since I had 0 results. This works so leave it <----------see ln 77
     if (scores < t).sum() == 0:
         t = float(np.percentile(scores, 5))
         if verbose:
