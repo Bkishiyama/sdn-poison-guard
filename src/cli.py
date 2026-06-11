@@ -1,24 +1,20 @@
 #!/usr/bin/env python3
-"""
-cli.py — SDN Federated Anomaly Detection Tool
-
-This is the main command-line interface for our Federated Learning 
-SDN Anomaly Detection project.
-
-Common commands:
+""" src/cli.py  
+SDN Federated Anomaly Detection Tool
+This is the main command-line interface for FL 
+Commands:
   python3 cli.py generate-data --out-dir data/ --n-clients 3
   python3 cli.py train-local --data data/client1.csv --out models/client1.pkl
   python3 cli.py federated-aggregate --models "models/client*.pkl" --out models/global.pkl
   python3 cli.py detect --model models/global.pkl --data data/test.csv --top-n 10
   python3 cli.py evaluate --model models/global.pkl --data data/test_labeled.csv --out results/
-
-Run `python3 cli.py <command> --help` for more options on each command.
+Actually:
+Run `python3 cli.py <command> --help` for options on each command.
 """
 
 import argparse
 import sys
 import os
-
 
 # Subcommand Handlers
 # Each function handles one CLI command
@@ -39,7 +35,7 @@ def cmd_train_local(args):
     print(f"Model saved to: {args.out}")
 
 
-# Combine multiple local models into main global federated model
+# Combine all local models into one main global federated model
 def cmd_federated_aggregate(args):
     from src.federated import load_client_models, aggregate_and_save
     
@@ -50,7 +46,7 @@ def cmd_federated_aggregate(args):
     print(f"Strategy used: {args.strategy}")
 
 
-# Score new network flows and detect anomalies using the trained model
+# Detect and score new network flows and detect anomalies using the updated trained model
 def cmd_detect(args):
     from src.detect import detect
     
@@ -76,7 +72,7 @@ def cmd_detect(args):
         print(df[cols].head(10).to_string(index=False))
 
 
-# Evaluate model performance on labeled test data.
+# Determine model performance on labeled test data.
 # Compare the global federated model against individual local models.
 def cmd_evaluate(args):
     import glob
@@ -142,13 +138,13 @@ def cmd_evaluate(args):
                         out_path=os.path.join(args.out, "recall_comparison.png"))
 
 
-# Run a Federated Learning simulation with several rounds from a config file
+# Run a FL simulation with several rounds from a config file; set at 3
 def cmd_simulate_fl(args):
     try:
         import yaml
     except ImportError:
         print("[!] PyYAML is required for simulation.")
-        print("    Install with: pip install pyyaml")
+        print("[!] Install with: pip install pyyaml")
         sys.exit(1)
     
     with open(args.config) as f:
@@ -181,7 +177,6 @@ def cmd_generate_data(args):
     
     print(f"\n[!] Synthetic data generated in: {args.out_dir}")
     print(f"    Created {args.n_clients} client datasets.")
-
 
 
 # Argument Parser Setup
