@@ -1,13 +1,10 @@
 from __future__ import annotations
 #!/usr/bin/env python3
 
-""" mininet/topology.py
-SDN Lab Topology for Mininet
-Creates a 3-switch topology where each switch represents a different
-"organization" (federated client).  Hosts generate both benign and
-attack traffic so the Ryu collector captures a realistic mix.
-See README for topology.
-Traffic generated:
+""" mininet/topology.py - SDN Lab Topology for Mininet
+Create a 3 switches for topology. Two or more hosts per switch. The hosts 
+generate both benign and attack traffic - a realistic capture for Ryu Controller.
+See README for topology adjustments for Tools 1 and 2. Traffic generated:
 Benign: iperf3 TCP/UDP streams, ping, curl-like HTTP
 DDoS: hping3 SYN flood from h4 -> h1
 Scan: nmap port scan from h6 -> h1..h5
@@ -15,7 +12,7 @@ Usage:
 sudo python3 mininet/topology.py [--attack]
   --attack   also launch attack traffic generators (default: benign only)
   --time N   run for N seconds (default: 60)
-Requirements (installed by install.sh): Mininet, hping3, nmap, iperf3
+Requirements installed by install.sh: Mininet, hping3, nmap, iperf3
 """
 
 import argparse
@@ -29,8 +26,8 @@ from mininet.util import dumpNodeConnections
 
 
 # Topology definition
-# Three switches (one per federated client), each with two hosts.
-# Switches are connected in a line: s1 - s2 - s3.
+# Three switches each with two hosts.
+# Switches are connected in a line: s1 ↔ s2 ↔ s3.
 class FederatedSDNTopo(Topo):
     def build(self):
         # Switches (one per "client organization")
@@ -60,8 +57,8 @@ class FederatedSDNTopo(Topo):
 
 
 # Traffic generators - Launch benign background traffic between hosts.
-# Uses iperf3 (TCP + UDP) and ping to generate realistic flow diversity.
-# All commands run in the background (&) so Mininet stays interactive.
+# Uses iperf3 (TCP, UDP, and ping) to generate realistic flow.
+# All commands run in the background so Mininet stays interactive.
 def start_benign_traffic(net, duration: int):
     h1 = net.get("h1")
     h2 = net.get("h2")
@@ -93,8 +90,8 @@ def start_benign_traffic(net, duration: int):
     info("[!] iperf3 TCP/UDP, ping, HTTP traffic started\n")
 
 
-# Launch attack traffic from designated attacker hosts.
-# Labels are NOT automatically set in the CSV; you set them manually
+# Launch attack traffic from designated attacker host.
+# Labels are NOT automatically set in the CSV; you must set them manually
 # by noting the time window, or by running benign and attack phases separately.
 def start_attack_traffic(net, duration: int):
     h4 = net.get("h4")   # DDoS attacker
@@ -105,7 +102,7 @@ def start_attack_traffic(net, duration: int):
     # DDoS: SYN flood from h4 -> h1
     # hping3: sends TCP SYN packets at high rate, spoofing source IPs
     # -S = SYN flag, --flood = max rate, -V = verbose, --rand-source = spoof src
-    # Rate-limited here (--interval u10000 = 100 pkt/s) to avoid VM overload
+    # Limit the rate (--interval u10000 = 100 pkt/s) to avoid VM overload
     info("[!] DDoS SYN flood: h4 -> h1 (10.0.0.1:80)\n")
     h4.cmd(
         f"timeout {duration} hping3 -S -p 80 "
@@ -114,8 +111,8 @@ def start_attack_traffic(net, duration: int):
     )
 
     # Port scan: h6 scans all hosts
-    # nmap SYN scan across the /24 ranges; slow timing (-T2) keeps it visible
-    # in flow stats without overwhelming the controller
+    # nmap SYN scan across the /24 ranges; slow timing (-T2) to keep it visible
+    # and so flow stats doesn't overwhelm the controller
     info("[!] Port scan: h6 -> 10.0.1.0/24 and 10.0.2.0/24\n")
     h6.cmd(
         "nmap -sS -T2 -p 1-1024 "
@@ -145,7 +142,6 @@ After traffic generation, label the attack flows:
     --all \\
     --label 1
 """
-
 
 def run(run_attacks: bool = False, duration: int = 60):
     setLogLevel("info")
