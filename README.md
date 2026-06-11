@@ -540,7 +540,7 @@ sudo mn -c
 ---
 
 ## CLI Reference
-IN PROGRESS - UPDATE and REMOVE when completed
+
 | Command | Description |
 |---|---|
 | `generate-data` | Generate synthetic SDN flow CSVs for N clients |
