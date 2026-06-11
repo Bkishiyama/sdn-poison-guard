@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
-# install.sh — Ubuntu 20.04 setup for SDN Federated Anomaly Detection Lab
-#
+# install.sh - Ubuntu 20.04 setup for SDN Federated Anomaly Detection Lab
 # This script installs everything needed for the lab:
 #   - Mininet from source
 #   - Ryu SDN controller
 #   - Tools: hping3, nmap, iperf3
-#
-# TODO:
+# Usage:
 #   chmod +x install.sh
 #   ./install.sh
-#
 # Last updated: May 18, 2026
 
 set -euo pipefail
@@ -41,14 +38,14 @@ sudo apt-get install -y \
     help2man \
     --no-install-recommends
 
-# Ensure Open vSwitch is running (required by Mininet)
+# Ensure Open vSwitch is running
 sudo systemctl enable openvswitch-switch
 sudo systemctl start  openvswitch-switch
 info "[!] Open vSwitch running"
 
-# Step 2: Mininet from source (Python 3)
-# The apt version of Mininet on Ubuntu 20.04 installs under Python 2.7.
-# We need the source version for Python 3 compatibility.
+# Step 2: Install Mininet from source to become Python 3 compatible
+# Ubuntu 20.04 apt package installs Python 2.7 version of Mininet
+# Building from source is needed to get the Python 3 version.
 
 info "Installing Mininet from source (Python 3)..."
 
@@ -77,7 +74,6 @@ fi
 
 # Step 3: Ryu SDN framework
 # Note: eventlet 0.30.2 is required; newer versions break Ryu on Python 3.8
-
 info "Installing Ryu SDN framework..."
 pip3 install --user \
     ryu \
@@ -100,18 +96,15 @@ else
 fi
 
 # Step 4: Python dependencies
-
 info "Installing Python dependencies..."
 pip3 install --user -r requirements.txt
 
 # Step 5: Quick Mininet self-test
-
 info "Running Mininet connectivity self-test..."
 sudo mn --test pingall 2>&1 | tail -5
 sudo mn -c 2>/dev/null || true
 
 # Display results
-
 echo ""
 echo -e "${GREEN}------------------------------------------------${NC}"
 echo -e "${GREEN}  --> Installation is complete!${NC}"
