@@ -454,7 +454,7 @@ docker compose download
 
 #### Topology
 
-![Controller Diagram](docs/sdn_fl_T2.drawio)
+![Controller Diagram](docs/sdn_fl_T2.drawio.svg)
 
 #### Step-by-Step
 
