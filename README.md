@@ -32,7 +32,7 @@ Watch my videos:
 > 🎥 [Tool 2 via Ubuntu](https://youtu.be/Fulgya3ur50)  
 > 📚 with [Ubuntu 20.04 copy-and-paste commands](https://1drv.ms/w/c/0b9ef4570f82165e/IQBXJKOy6xZtR51jDiccrUPGASaOnZaDEbmwjHwNuPPSW9k?e=rWurS4)
 
-> ⚠️ [Helpful Notes](https://1drv.ms/w/c/0b9ef4570f82165e/IQDQ-owdZ51dSp5sOUdZ9-3UAcQAu75kgUbN1E-v2f7IYlA?e=hzKfK7)
+> ⚠️ [Helpful Notes](https://1drv.ms/w/c/0b9ef4570f82165e/IQDQ-owdZ51dSp5sOUdZ9-3UAcQAu75kgUbN1E-v2f7IYlA?e=wUEt1m)
 
 ---
 
